@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "956776010520",
+    "firebase_url": "https://watterplannet-c98eb.firebaseio.com",
+    "project_id": "watterplannet-c98eb",
+    "storage_bucket": "watterplannet-c98eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956776010520:android:28e5b68cc0a9007669c46d",
+        "android_client_info": {
+          "package_name": "com.example.watterplannet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "956776010520-2vjl8cgvc24avmc71fe8o7nebit3lhu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.watterplannet",
+            "certificate_hash": "c2eff32e7cd356a43e7c2eca86a120cb3b10c068"
+          }
+        },
+        {
+          "client_id": "956776010520-2k7b9t3ja8lm02vhikiqgresqbpiojnu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZLGoCq_da2ilxLpaR4u-eQKxv8F1o7AU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "956776010520-2k7b9t3ja8lm02vhikiqgresqbpiojnu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
