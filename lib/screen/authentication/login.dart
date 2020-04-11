@@ -1,22 +1,34 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:watterplannet/class/user.dart';
 import 'package:watterplannet/services/Auth.dart';
+import 'package:flutter/services.dart';
+import 'package:watterplannet/utils/validators.dart';
 
 class Login extends StatefulWidget {
   @override
-  _LoginScreen3State createState() => new _LoginScreen3State();
+  _LoginScreenState createState() => new _LoginScreenState();
 }
 
-class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
+class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   final GlobalKey<FormState> _loginKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUpKey = GlobalKey<FormState>();
-  Authentication _auth = Authentication();
 
+  Authentication _auth = Authentication();
   // FlusBar flusBar = FlusBar();
 
   String _email, _password, _address, _name, _lastName;
   int _phoneNumber;
-  String _title = 'Create Account';
+  User newUser;
+
+  var customBackgroundPicture = BoxDecoration(
+      color: Colors.white,
+      image: DecorationImage(
+        colorFilter: new ColorFilter.mode(
+            Colors.black.withOpacity(0.05), BlendMode.dstATop),
+        image: AssetImage(''),
+        fit: BoxFit.cover,
+      ));
 
   var headerofPage = Container(
     padding: EdgeInsets.only(top: 25.0, bottom: 20),
@@ -38,14 +50,7 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
     ),
   );
 
-  var customBackgroundPicture = BoxDecoration(
-      color: Colors.white,
-      image: DecorationImage(
-        colorFilter: new ColorFilter.mode(
-            Colors.black.withOpacity(0.05), BlendMode.dstATop),
-        image: AssetImage(''),
-        fit: BoxFit.cover,
-      ));
+  String _loginEmail, _loginPassword;
 
   @override
   void initState() {
@@ -199,11 +204,11 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
   Widget loginPage() {
     return Form(
       key: _loginKey,
-      child: new Container(
+      child: Container(
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(color: Colors.white, image: customImage),
         child: SingleChildScrollView(
-            child: new Column(children: <Widget>[
+            child: Column(children: <Widget>[
           Container(
             padding: EdgeInsets.all(100.0),
             child: Center(
@@ -216,12 +221,13 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
           ),
           Column(
             children: <Widget>[
-              new Row(
+              Row(
+                //Label Email
                 children: <Widget>[
-                  new Expanded(
-                    child: new Padding(
+                  Expanded(
+                    child: Padding(
                       padding: const EdgeInsets.only(left: 40.0),
-                      child: new Text(
+                      child: Text(
                         'Email'.toUpperCase(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -234,6 +240,7 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                 ],
               ), //Cabezera
               Container(
+                  //Input Email
                   width: MediaQuery.of(context).size.width,
                   margin:
                       const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
@@ -247,29 +254,20 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                     ),
                   ),
                   padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: new Row(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      new Expanded(
+                      Expanded(
                         child: TextFormField(
                           obscureText: false,
                           textAlign: TextAlign.left,
-                          keyboardType: TextInputType.text,
-                          onSaved: (input) => _email = input,
-                          validator: (input) {
-                            if (input.runtimeType == String) {
-                              if (input.isEmpty) {
-                                return 'Favor de completar el campo';
-                              } else if (input.length < 6) {
-                                return 'Debe tener al menos 6 caracteres';
-                              }
-                            } else {
-                              if (input.length < 6) {
-                                return 'Debe tener al menos 6 caracteres';
-                              }
-                            }
-                          },
+                          keyboardType: TextInputType.emailAddress,
+                          onSaved: (input) => _loginEmail = input,
+                          validator: (input) =>
+                              input.isEmpty || input.length < 6
+                                  ? 'Favor de completar campo'
+                                  : null,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Example@live.com',
@@ -282,12 +280,14 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
               Divider(
                 height: 24.0,
               ),
-              new Row(
+
+              Row(
+                //Label Password
                 children: <Widget>[
-                  new Expanded(
-                    child: new Padding(
+                  Expanded(
+                    child: Padding(
                       padding: const EdgeInsets.only(left: 40.0),
-                      child: new Text(
+                      child: Text(
                         'Password'.toUpperCase(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -300,6 +300,7 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                 ],
               ), //Cabezera
               Container(
+                  //Input Password
                   width: MediaQuery.of(context).size.width,
                   margin:
                       const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
@@ -313,29 +314,20 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                     ),
                   ),
                   padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: new Row(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      new Expanded(
+                      Expanded(
                         child: TextFormField(
                           obscureText: true,
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.text,
-                          onSaved: (input) => _password = input,
-                          validator: (input) {
-                            if (input.runtimeType == String) {
-                              if (input.isEmpty) {
-                                return 'Favor de completar el campo';
-                              } else if (input.length < 6) {
-                                return 'Debe tener al menos 6 caracteres';
-                              }
-                            } else {
-                              if (input.length < 6) {
-                                return 'Debe tener al menos 6 caracteres';
-                              }
-                            }
-                          },
+                          onSaved: (input) => _loginPassword = input,
+                          validator: (input) => input.isEmpty ||
+                                  input.length < 6
+                              ? 'Favor de completar campo con una clave mayor de 6 digitos'
+                              : null,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: '*******',
@@ -345,12 +337,14 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                       ),
                     ],
                   )),
-              new Row( //Label
+
+              Row(
+                //Label for Forgot Password
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
-                    child: new FlatButton(
+                    child: FlatButton(
                       child: new Text(
                         "Forgot Password?",
                         style: TextStyle(
@@ -365,32 +359,33 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-              new Container( //Boton Login
+
+              Container(
+                //Boton Login
                 width: MediaQuery.of(context).size.width,
                 margin:
                     const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
                 alignment: Alignment.center,
-                child: new Row(
+                child: Row(
                   children: <Widget>[
-                    new Expanded(
-                      child: new FlatButton(
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0),
+                    Expanded(
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
                         ),
                         color: Colors.redAccent,
-                        onPressed: () async {
-                          this._loginKey.currentState.save();
-                          print( await _auth.singwithEmail(this._email, this._password));
-                        } ,
-                        child: new Container( //Space
+                        onPressed: () => logIn(),
+                        child: Container(
+                          //Space
                           padding: const EdgeInsets.symmetric(
                             vertical: 20.0,
                             horizontal: 20.0,
                           ),
-                          child: new Row( //Label Botton
+                          child: Row(
+                            //Label Botton
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              new Expanded(
+                              Expanded(
                                 child: Text(
                                   "LOGIN",
                                   textAlign: TextAlign.center,
@@ -414,44 +409,7 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
     );
   }
 
-  // void logIn() async {
-  //   if (_loginKey.currentState.validate()) {
-  //     _loginKey.currentState.save();
-
-  //     var output = await service.loginWithEmailAndPassword(_email, _password);
-
-  //       if(output.runtimeType == String){
-  //                flusBar.getBar(context: context,title: 'Notificacion',message: output ); //To-Do
-  //       }
-  //       else{
-  //           Navigator.pushNamed(context, 'home');
-  //       }
-
-  //   } else {
-  //     print('faliled saving the data from the form');
-  //   }
-  // }
-
-  // void signIn() async {
-
-  //   if(_signUpKey.currentState.validate()){
-  //     _signUpKey.currentState.save();
-
-  //       var output = await service.signWithEmailAndPassword(_email, _password);
-
-  //       if(output.runtimeType == String){
-  //          flusBar.getBar(context: context,title: 'Notificacion',message: output.toString()); //ToDo
-  //       }
-  //       else{
-  //         flusBar.getBar(context: context,title: 'Notificacion',message: "Usuario Creado con Exito, ver correo."); //ToDo
-  //         _signUpKey.currentState.reset();
-  //       }
-
-  //   }
-
-  // }
-
-  Widget signupPage() {
+  Widget signUp() {
     return Form(
         key: _signUpKey,
         child: Container(
@@ -462,10 +420,11 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
             headerofPage,
             Column(
               children: <Widget>[
-
-                new Row( //Label Nombre
+                Row(
+                  //Label Nombre
                   children: <Widget>[
-                    new Expanded( //Label Nombre
+                    new Expanded(
+                      //Label Nombre
                       child: new Padding(
                         padding: const EdgeInsets.only(left: 40.0),
                         child: new Text(
@@ -480,7 +439,8 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                     ),
                   ],
                 ), //Cabezera
-                Container(//Input Nombre
+                Container(
+                  //Input Nombre
                   width: MediaQuery.of(context).size.width,
                   margin:
                       const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
@@ -503,19 +463,11 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                           obscureText: false,
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.text,
-                          onSaved: (input) => _name = input,
-                          validator: (input) {
-                            if (input.runtimeType == String) {
-                              if (input.isEmpty) {
-                                return 'Favor de completar el campo';
-                              } else if (input.length < 6) {
-                                return 'Debe tener al menos 6 caracteres';
-                              }
-                            } else {
-                              if (input.length < 6) {
-                                return 'Debe tener al menos 6 caracteres';
-                              }
-                            }
+                          onSaved: (value) => _name = value,
+                          validator: (value) {
+                            if (value.isEmpty || value.length < 6)
+                              return 'Favor de completar este campo con al menos 6 digitos';
+                            return null;
                           },
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -530,347 +482,315 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                 Divider(
                   height: 24.0,
                 ),
-                
-                Column(children: <Widget>[
-                  new Row(//Label Apellido
+
+                Row(
+                  //Label Apellido
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: new Text(
+                          'Apellido'.toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ), //Cabezera
+                Container(
+                  //Input Apellido
+                  width: MediaQuery.of(context).size.width,
+                  margin:
+                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.blueAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
+                    ),
+                  ),
+                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                  child: new Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       new Expanded(
-                        child: new Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: new Text(
-                            'Apellido'.toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.redAccent,
-                              fontSize: 15.0,
-                            ),
+                        child: TextFormField(
+                          obscureText: false,
+                          textAlign: TextAlign.left,
+                          keyboardType: TextInputType.text,
+                          onSaved: (input) => _lastName = input,
+                          validator: (input) => input.isEmpty ||
+                                  input.length < 6
+                              ? 'Favor de completar campo con almenos 6 digitos'
+                              : null,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Ruiz Nunez',
+                            hintStyle: TextStyle(color: Colors.blueGrey),
                           ),
                         ),
                       ),
                     ],
-                  ), //Cabezera
-                  Container(//Input Apellido
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(
-                        left: 40.0, right: 40.0, top: 10.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: Colors.blueAccent,
-                            width: 0.5,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                    child: new Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        new Expanded(
-                          child: TextFormField(
-                            obscureText: false,
-                            textAlign: TextAlign.left,
-                            keyboardType: TextInputType.text,
-                            onSaved: (input) => _lastName = input,
-                            validator: (input) {
-                              if (input.runtimeType == String) {
-                                if (input.isEmpty) {
-                                  return 'Favor de completar el campo';
-                                } else if (input.length < 6) {
-                                  return 'Debe tener al menos 6 caracteres';
-                                }
-                              } else {
-                                if (input.length < 6) {
-                                  return 'Debe tener al menos 6 caracteres';
-                                }
-                              }
-                            },
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Ruiz Nunez',
-                              hintStyle: TextStyle(color: Colors.blueGrey),
-                            ),
+                  ),
+                ),
+                Divider(
+                  height: 24.0,
+                ),
+
+                Row(
+                  //Label Correo
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: new Text(
+                          'Correo'.toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
                           ),
                         ),
-                      ],
+                      ),
+                    ),
+                  ],
+                ), //Cabezera
+                Container(
+                  //Input Correo
+                  width: MediaQuery.of(context).size.width,
+                  margin:
+                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.blueAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
                     ),
                   ),
-                  Divider(
-                    height: 24.0,
-                  ),
-                ]),
-
-                Column(children: <Widget>[
-                  new Row(//Label Correo
+                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                  child: new Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       new Expanded(
-                        child: new Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: new Text(
-                            'Correo'.toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.redAccent,
-                              fontSize: 15.0,
-                            ),
+                        child: TextFormField(
+                          obscureText: false,
+                          textAlign: TextAlign.left,
+                          keyboardType: TextInputType.emailAddress,
+                          onSaved: (input) => _email = input,
+                          validator: (input) => input.isEmpty ||
+                                  input.length < 6
+                              ? 'Favor de completar campo con almenos 6 digitos'
+                              : null,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Example@live.com',
+                            hintStyle: TextStyle(color: Colors.blueGrey),
                           ),
                         ),
                       ),
                     ],
-                  ), //Cabezera
-                  Container(//Input Correo
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(
-                        left: 40.0, right: 40.0, top: 10.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: Colors.blueAccent,
-                            width: 0.5,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                    child: new Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        new Expanded(
-                          child: TextFormField(
-                            obscureText: false,
-                            textAlign: TextAlign.left,
-                            keyboardType: TextInputType.emailAddress,
-                            onSaved: (input) => _email = input,
-                            validator: (input) {
-                              if (input.runtimeType == String) {
-                                if (input.isEmpty) {
-                                  return 'Favor de completar el campo';
-                                }
-                              }
-                            },
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Example@live.com',
-                              hintStyle: TextStyle(color: Colors.blueGrey),
-                            ),
+                  ),
+                ),
+                Divider(
+                  height: 24.0,
+                ),
+
+                Row(
+                  //Label Contrasena
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: new Text(
+                          'Contraseña'.toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
                           ),
                         ),
-                      ],
+                      ),
+                    ),
+                  ],
+                ), //Cabezera
+                Container(
+                  //Input Contrasena
+                  width: MediaQuery.of(context).size.width,
+                  margin:
+                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.blueAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
                     ),
                   ),
-                  Divider(
-                    height: 24.0,
-                  )
-                ]),
-
-                Column(children: <Widget>[
-                  new Row(//Label Contrasena
+                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                  child: new Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       new Expanded(
-                        child: new Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: new Text(
-                            'Contraseña'.toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.redAccent,
-                              fontSize: 15.0,
-                            ),
+                        child: TextFormField(
+                          obscureText: true,
+                          textAlign: TextAlign.left,
+                          keyboardType: TextInputType.visiblePassword,
+                          onSaved: (input) => _password = input,
+                          validator: (input) => input.isEmpty ||
+                                  input.length < 6
+                              ? 'Favor de completar campo con al menos 6 digitos'
+                              : null,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '*******',
+                            hintStyle: TextStyle(color: Colors.blueGrey),
                           ),
                         ),
                       ),
                     ],
-                  ), //Cabezera
-                  Container( //Input Contrasena
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(
-                        left: 40.0, right: 40.0, top: 10.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: Colors.blueAccent,
-                            width: 0.5,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                    child: new Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        new Expanded(
-                          child: TextFormField(
-                            obscureText: true,
-                            textAlign: TextAlign.left,
-                            keyboardType: TextInputType.visiblePassword,
-                            onSaved: (input) => _password = input,
-                            validator: (input) {
-                              if (input.runtimeType == String) {
-                                if (input.isEmpty) {
-                                  return 'Favor de completar el campo';
-                                } else if (input.length < 6) {
-                                  return 'Debe tener al menos 6 caracteres';
-                                }
-                              } else {
-                                if (input.length < 6) {
-                                  return 'Debe tener al menos 6 caracteres';
-                                }
-                              }
-                            },
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: '*******',
-                              hintStyle: TextStyle(color: Colors.blueGrey),
-                            ),
+                  ),
+                ),
+                Divider(
+                  height: 24.0,
+                ),
+
+                Row(
+                  // Label Direccion
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: new Text(
+                          'Direccion'.toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
                           ),
                         ),
-                      ],
+                      ),
+                    ),
+                  ],
+                ), //Cabezera
+                Container(
+                  // Input Direccion
+                  width: MediaQuery.of(context).size.width,
+                  margin:
+                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.blueAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
                     ),
                   ),
-                  Divider(
-                    height: 24.0,
-                  )
-                ]),
-
-                Column(children: <Widget>[
-                  new Row( // Label Direccion
+                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                  child: new Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       new Expanded(
-                        child: new Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: new Text(
-                            'Direccion'.toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.redAccent,
-                              fontSize: 15.0,
-                            ),
+                        child: TextFormField(
+                          obscureText: false,
+                          textAlign: TextAlign.left,
+                          keyboardType: TextInputType.text,
+                          onSaved: (input) => _address = input,
+                          validator: (input) => input.isEmpty ||
+                                  input.length < 6
+                              ? 'Favor de completar campo con almenos 6 digitos'
+                              : null,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText:
+                                'Residencial Prado Oriental, Pimienta #35',
+                            hintStyle: TextStyle(color: Colors.blueGrey),
                           ),
                         ),
                       ),
                     ],
-                  ), //Cabezera
-                  Container( // Input Direccion
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(
-                        left: 40.0, right: 40.0, top: 10.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: Colors.blueAccent,
-                            width: 0.5,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                    child: new Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        new Expanded(
-                          child: TextFormField(
-                            obscureText: false,
-                            textAlign: TextAlign.left,
-                            keyboardType: TextInputType.text,
-                            onSaved: (input) => _address = input,
-                            validator: (input) {
-                              if (input.runtimeType == String) {
-                                if (input.isEmpty) {
-                                  return 'Favor de completar el campo';
-                                }
-                              }
-                            },
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText:
-                                  'Residencial Prado Oriental, Pimienta #35',
-                              hintStyle: TextStyle(color: Colors.blueGrey),
-                            ),
+                  ),
+                ),
+                Divider(
+                  height: 24.0,
+                ),
+
+                Row(
+                  //Label Telefono
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: new Text(
+                          'Telefono'.toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
                           ),
                         ),
-                      ],
+                      ),
+                    ),
+                  ],
+                ), //Cabezera
+                Container(
+                  //Input Telefono
+                  width: MediaQuery.of(context).size.width,
+                  margin:
+                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.blueAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
                     ),
                   ),
-                  Divider(
-                    height: 24.0,
-                  )
-                ]),
-
-                Column(children: <Widget>[
-                  new Row( //Label Telefono
+                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                  child: new Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       new Expanded(
-                        child: new Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: new Text(
-                            'Telefono'.toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.redAccent,
-                              fontSize: 15.0,
-                            ),
+                        child: TextFormField(
+                          obscureText: false,
+                          textAlign: TextAlign.left,
+                          keyboardType: TextInputType.phone,
+                          onSaved: (input) => _phoneNumber = int.parse(input),
+                          validator: (input) => input.isEmpty ||
+                                  input.length < 6
+                              ? 'Favor de completar campo con almenos 6 digitos'
+                              : null,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '809-345-6789',
+                            hintStyle: TextStyle(color: Colors.blueGrey),
                           ),
                         ),
                       ),
                     ],
-                  ), //Cabezera
-                  Container(//Input Telefono
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(
-                        left: 40.0, right: 40.0, top: 10.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: Colors.blueAccent,
-                            width: 0.5,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                    child: new Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        new Expanded(
-                          child: TextFormField(
-                            obscureText: false,
-                            textAlign: TextAlign.left,
-                            keyboardType: TextInputType.phone,
-                            onSaved: (input) => _phoneNumber = int.parse(input),
-                            validator: (input) {
-                              if (input.runtimeType == String) {
-                                if (input.isEmpty) {
-                                  return 'Favor de completar el campo';
-                                } else if (input.length < 6) {
-                                  return 'Debe tener al menos 6 caracteres';
-                                }
-                              } else {
-                                if (input.length < 6) {
-                                  return 'Debe tener al menos 6 caracteres';
-                                }
-                              }
-                            },
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: '809-345-6789',
-                              hintStyle: TextStyle(color: Colors.blueGrey),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
-                  Divider(
-                    height: 24.0,
-                  )
-                ]),
+                ),
+                Divider(
+                  height: 24.0,
+                ),
 
-                Row( //Label for password fogotten
+                Row(
+                  //Label for password fogotten
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Padding(
@@ -891,7 +811,8 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                   ],
                 ),
 
-                Container( // Boton SIGN UP
+                Container(
+                  // Boton SIGN UP
                   width: MediaQuery.of(context).size.width,
                   margin: const EdgeInsets.only(
                       left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
@@ -904,7 +825,7 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                             borderRadius: new BorderRadius.circular(30.0),
                           ),
                           color: Colors.redAccent,
-                          onPressed: () => null, //signIn(),
+                          onPressed: signIn,
                           child: new Container(
                             padding: const EdgeInsets.symmetric(
                               vertical: 20.0,
@@ -934,6 +855,63 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
             ),
           ])),
         ));
+  }
+
+  void logIn() async {
+    if (_loginKey.currentState.validate()) {
+      _loginKey.currentState.save();
+
+      AuthResult output =
+          await _auth.singwithEmail(_loginEmail, _loginPassword);
+
+      // if(output.runtimeType == String){
+      //          flusBar.getBar(context: context,title: 'Notificacion',message: output ); //To-Do
+      // }
+      // else{
+      //     Navigator.pushNamed(context, 'home');
+      // }
+
+      print(output.user.isEmailVerified);
+    } else {
+      print('faliled saving the data from the form');
+    }
+  }
+
+  void signIn() {
+    if (this._signUpKey.currentState.validate()) {
+      this._signUpKey.currentState.save();
+      this._signUpKey.currentState.reset();
+
+      var output = newUser = User(
+          email: this._email.trim(),
+          password: this._password.trim(),
+          name: this._name.trim(),
+          lastName: this._lastName.trim(),
+          address: this._address.trim(),
+          phoneNumber: this._phoneNumber.toString().trim());
+
+      var outputFromEmailAccount = _auth.registerUser(_email, _password);
+
+      print(output);
+      print(outputFromEmailAccount);
+    } else {
+      print(this._signUpKey.currentState);
+    }
+
+    // if(_signUpKey.currentState.validate()){
+    //   _signUpKey.currentState.save();
+
+    //     var output = await service.signWithEmailAndPassword(_email, _password);
+
+    //     if(output.runtimeType == String){
+    //        flusBar.getBar(context: context,title: 'Notificacion',message: output.toString()); //ToDo
+    //     }
+    //     else{
+    //       flusBar.getBar(context: context,title: 'Notificacion',message: "Usuario Creado con Exito, ver correo."); //ToDo
+    //       _signUpKey.currentState.reset();
+    //     }
+
+    // }
   }
 
   gotoLogin() {
@@ -995,20 +973,8 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
                 obscureText: isObscureText,
                 textAlign: TextAlign.left,
                 keyboardType: typeofInput,
-                onSaved: (input) => fieldC = input,
-                validator: (input) {
-                  if (input.runtimeType == String) {
-                    if (input.isEmpty) {
-                      return 'Favor de completar el campo';
-                    } else if (input.length < 6) {
-                      return 'Debe tener al menos 6 caracteres';
-                    }
-                  } else {
-                    if (input.length < 6) {
-                      return 'Debe tener al menos 6 caracteres';
-                    }
-                  }
-                },
+                onSaved: (input) => setState(() => fieldC = input),
+                validator: (input) => validator(input),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: hintext,
@@ -1036,7 +1002,7 @@ class _LoginScreen3State extends State<Login> with TickerProviderStateMixin {
           child: PageView(
             controller: _controller,
             physics: new AlwaysScrollableScrollPhysics(),
-            children: <Widget>[loginPage(), homePage(), signupPage()],
+            children: <Widget>[loginPage(), homePage(), signUp()],
             scrollDirection: Axis.horizontal,
           )),
     );

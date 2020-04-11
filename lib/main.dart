@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       builder: DevicePreview.appBuilder,
+    
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
