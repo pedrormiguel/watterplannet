@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:watterplannet/class/user.dart';
+import 'package:watterplannet/screen/home/home_page.dart';
 import 'package:watterplannet/services/Auth.dart';
 import 'package:flutter/services.dart';
+import 'package:watterplannet/utils/FlushBart.dart';
 import 'package:watterplannet/utils/validators.dart';
 
 class Login extends StatefulWidget {
@@ -14,8 +15,9 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   final GlobalKey<FormState> _loginKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUpKey = GlobalKey<FormState>();
 
+  FlusBar flusBar = FlusBar();
+
   Authentication _auth = Authentication();
-  // FlusBar flusBar = FlusBar();
 
   String _email, _password, _address, _name, _lastName;
   int _phoneNumber;
@@ -26,7 +28,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
       image: DecorationImage(
         colorFilter: new ColorFilter.mode(
             Colors.black.withOpacity(0.05), BlendMode.dstATop),
-        image: AssetImage(''),
+        image: AssetImage('assets/backgroundLogin.jpg'),
         fit: BoxFit.cover,
       ));
 
@@ -67,7 +69,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   DecorationImage customImage = DecorationImage(
     colorFilter:
         new ColorFilter.mode(Colors.black.withOpacity(0.05), BlendMode.dstATop),
-    image: AssetImage(''),
+    image: AssetImage('assets/backgroundLogin.jpg'),
     fit: BoxFit.cover,
   );
 
@@ -79,7 +81,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
         image: DecorationImage(
           colorFilter: new ColorFilter.mode(
               Colors.black.withOpacity(0.1), BlendMode.dstATop),
-          image: AssetImage(''),
+          image: AssetImage('assets/backgroundLogin.jpg'),
           fit: BoxFit.cover,
         ),
       ),
@@ -420,8 +422,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
             headerofPage,
             Column(
               children: <Widget>[
-                Row(
-                  //Label Nombre
+                Row( //Label Nombre
                   children: <Widget>[
                     new Expanded(
                       //Label Nombre
@@ -439,8 +440,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     ),
                   ],
                 ), //Cabezera
-                Container(
-                  //Input Nombre
+                Container( //Input Nombre
                   width: MediaQuery.of(context).size.width,
                   margin:
                       const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
@@ -483,8 +483,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                   height: 24.0,
                 ),
 
-                Row(
-                  //Label Apellido
+                Row( //Label Apellido
                   children: <Widget>[
                     new Expanded(
                       child: new Padding(
@@ -501,8 +500,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     ),
                   ],
                 ), //Cabezera
-                Container(
-                  //Input Apellido
+                Container( //Input Apellido
                   width: MediaQuery.of(context).size.width,
                   margin:
                       const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
@@ -540,12 +538,11 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     ],
                   ),
                 ),
-                Divider(
+                Divider (
                   height: 24.0,
                 ),
 
-                Row(
-                  //Label Correo
+                Row( //Label Correo
                   children: <Widget>[
                     new Expanded(
                       child: new Padding(
@@ -562,8 +559,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     ),
                   ],
                 ), //Cabezera
-                Container(
-                  //Input Correo
+                Container( //Input Correo
                   width: MediaQuery.of(context).size.width,
                   margin:
                       const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
@@ -605,8 +601,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                   height: 24.0,
                 ),
 
-                Row(
-                  //Label Contrasena
+                Row( //Label Contrasena
                   children: <Widget>[
                     new Expanded(
                       child: new Padding(
@@ -623,8 +618,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     ),
                   ],
                 ), //Cabezera
-                Container(
-                  //Input Contrasena
+                Container( //Input Contrasena
                   width: MediaQuery.of(context).size.width,
                   margin:
                       const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
@@ -666,10 +660,9 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                   height: 24.0,
                 ),
 
-                Row(
-                  // Label Direccion
-                  children: <Widget>[
-                    new Expanded(
+                Row( // Label Direccion
+                  children: 
+                  <Widget>[ Expanded(
                       child: new Padding(
                         padding: const EdgeInsets.only(left: 40.0),
                         child: new Text(
@@ -684,8 +677,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     ),
                   ],
                 ), //Cabezera
-                Container(
-                  // Input Direccion
+                Container( // Input Direccion
                   width: MediaQuery.of(context).size.width,
                   margin:
                       const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
@@ -728,8 +720,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                   height: 24.0,
                 ),
 
-                Row(
-                  //Label Telefono
+                Row( //Label Telefono
                   children: <Widget>[
                     new Expanded(
                       child: new Padding(
@@ -746,8 +737,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     ),
                   ],
                 ), //Cabezera
-                Container(
-                  //Input Telefono
+                Container( //Input Telefono
                   width: MediaQuery.of(context).size.width,
                   margin:
                       const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
@@ -789,8 +779,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                   height: 24.0,
                 ),
 
-                Row(
-                  //Label for password fogotten
+                Row( //Label for password fogotten
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Padding(
@@ -811,8 +800,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                   ],
                 ),
 
-                Container(
-                  // Boton SIGN UP
+                Container( // Boton SIGN UP
                   width: MediaQuery.of(context).size.width,
                   margin: const EdgeInsets.only(
                       left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
@@ -858,20 +846,29 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   }
 
   void logIn() async {
+
+    var output ;
+
     if (_loginKey.currentState.validate()) {
       _loginKey.currentState.save();
 
-      AuthResult output =
-          await _auth.singwithEmail(_loginEmail, _loginPassword);
+       output =
+          await _auth.loginWithEmailAndPassword(_loginEmail, _loginPassword);
 
-      // if(output.runtimeType == String){
-      //          flusBar.getBar(context: context,title: 'Notificacion',message: output ); //To-Do
-      // }
-      // else{
-      //     Navigator.pushNamed(context, 'home');
-      // }
+      if(output.runtimeType == String){
+        
+        flusBar.getBar(context: context,title: 'Notificacion',message: output ); 
+      }
+      else{
+          Navigator.pushAndRemoveUntil(
+            context, 
+            MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+            (Route<dynamic> route) => false);
+      }
+      //print(output.isEmailVerified);
+      
 
-      print(output.user.isEmailVerified);
+
     } else {
       print('faliled saving the data from the form');
     }
