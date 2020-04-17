@@ -6,19 +6,16 @@ class AppData {
   static List<Product> productList = [
 
     Product(
-        id:1, 
+        productID: 1.toString(), 
         name: 'Nike Air Max 200',
         price: 240.00,
-        isSelected: true,
-        isliked: false,
         image: 'assets/shooe_tilt_1.png',
         category: "Trending Now"),
 
     Product(
-        id:2,
+        productID: 2.toString(),
         name: 'Nike Air Max 97',
         price: 220.00,
-        isliked: false,
         image: 'assets/shoe_tilt_2.png',
         category: "Trending Now"),
 
@@ -26,34 +23,30 @@ class AppData {
   // Lista que muestra los articulos del carrito.
   static List<Product> cartList = [
     Product(
-        id:1,
+        productID: 1.toString(),
         name: 'Nike Air Max 200',
         price: 240.00,
-        isSelected: true,
-        isliked: false,
         image: 'assets/small_tilt_shoe_1.png',
         category: "Trending Now"),
+
     Product(
-        id:2,
+        productID: 2.toString(),
         name: 'Nike Air Max 97',
         price: 190.00,
-        isliked: false,
         image: 'assets/small_tilt_shoe_2.png',
         category: "Trending Now"),
+
     Product(
-        id:1,
+        productID: 1.toString(),
         name: 'Nike Air Max 92607',
         price: 220.00,
-        isliked: false,
         image: 'assets/small_tilt_shoe_3.png',
         category: "Trending Now"),
 
      Product(
-        id:2,
+        productID: 3.toString(),
         name: 'Nike Air Max 200',
         price: 240.00,
-        isSelected: true,
-        isliked: false,
         image: 'assets/small_tilt_shoe_1.png',
         category: "Trending Now"),
   ];

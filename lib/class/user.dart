@@ -1,11 +1,12 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:watterplannet/class/Enums/nameDocumentsTable.dart';
 
 import 'FirebaseDatabase.dart';
 
 class User  {
 
   //Personal Information
-  String key;
+  String userID;
   String name;
   String lastName;
   String phoneNumber;
@@ -15,28 +16,28 @@ class User  {
   //String userName;
   String password;
   String email;
-  bool   isSuperAdmin;
+  //bool   isSuperAdmin;
 
-  DatabaseReference userRef = FirebaseData.database.reference().child('user');
+  DatabaseReference userRef = FirebaseData.database.reference().child( NameDocumentsTable.tableDocumentUser );
 
-  User({this.name,this.lastName,this.password,this.email,this.isSuperAdmin,this.phoneNumber,this.address}) {
+  User({this.name,this.lastName,this.password,this.email,this.phoneNumber,this.address}) {
     handleSubmit();
   }
 
 
   void handleSubmit() async {
     print(toJson());
-    await userRef.push().set(toJson());
+    await userRef.push().set(toJson()); // TODO Arreglar error al momento de que falla pero aun crea cuenta.
   }
 
   User.fromSnapshot( DataSnapshot snapshot)
-       : key          = snapshot.key,
+       : userID       = snapshot.key,
          name         = snapshot.value["name"],
          lastName     = snapshot.value["lastName"],
          //userName     = snapshot.value["userName"],
          password     = snapshot.value["password"],
          email        = snapshot.value["email"],
-         isSuperAdmin = snapshot.value["isSuperAdmin"],
+         //isSuperAdmin = snapshot.value["isSuperAdmin"],
          phoneNumber  = snapshot.value["phoneNumber"],
          address      = snapshot.value["address"];
 
@@ -47,7 +48,7 @@ class User  {
         //"userName"     : userName,
         "password"     : password,
         "email"        : email,
-        "isSuperAdmin" : isSuperAdmin,
+       // "isSuperAdmin" : isSuperAdmin,
         "phoneNumber"  : phoneNumber,
         "address"      : address
     };

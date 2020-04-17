@@ -54,6 +54,10 @@ class Authentication {
         code =
             'There have been too many requests sent from this device. Please try again later.';
         break;
+      case 'ERROR_INVALID_EMAIL':
+        code =
+            'The email address is badly formatted.';
+        break;
       default:
         code = "There was an error with your request.";
         break;
