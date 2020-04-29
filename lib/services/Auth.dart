@@ -1,11 +1,11 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:watterplannet/class/data.dart';
 
 class Authentication {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String code;
-
 
   singAno() { 
     _auth.signInAnonymously();
@@ -15,6 +15,8 @@ class Authentication {
      try {
             AuthResult result = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
             FirebaseUser user = result.user;
+            // print(user.email + " "+ user.uid);
+            AppData.getProduct();
             return user;
 
      }catch (error){
@@ -59,7 +61,7 @@ class Authentication {
             'The email address is badly formatted.';
         break;
       default:
-        code = "There was an error with your request.";
+        code = e.message;
         break;
     }
   }

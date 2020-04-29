@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watterplannet/screen/authentication/login.dart';
 import 'package:watterplannet/screen/home/home_page.dart';
+import 'package:watterplannet/screen/home/main_page.dart';
+import 'package:watterplannet/screen/home/shopping_cart_page.dart';
 import 'package:watterplannet/screen/wrapper.dart';
 
 Map<String, WidgetBuilder> getApplicationRoute() {
@@ -9,7 +11,8 @@ Map<String, WidgetBuilder> getApplicationRoute() {
 
       '/': (BuildContext context) => Login()        ,
       'home': (BuildContext context) => HomePage()  ,
+      'detail' : (BuildContext context) => ShopingCartPage(),
+      'mainPage' : (BuildContext context) => MainPage(),
       'wrapper': (BuildContext context) => Wrapper()
-
     };
 }
