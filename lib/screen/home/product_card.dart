@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:watterplannet/class/data.dart';
 import 'package:watterplannet/class/product.dart';
 import 'package:watterplannet/screen/home/title_text.dart';
 import 'package:watterplannet/theme/light_color.dart';
@@ -19,11 +21,13 @@ class _ProductCardState extends State<ProductCard> {
     super.initState();
   }
 
+   
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed('detail');
+        Navigator.of(context).pushNamed('detail',arguments: model);
         setState(() {
           // model.isSelected = !model.isSelected;
           //   AppData.productList.forEach((x) {
@@ -69,14 +73,14 @@ class _ProductCardState extends State<ProductCard> {
             Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 SizedBox(height: model.isSelected ? 15 : 0),
                 Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
                     CircleAvatar(
-                      radius: 40,
+                      radius: 50,
                       backgroundColor: LightColor.orange.withAlpha(40),
                     ),
                     SafeArea(
@@ -91,18 +95,18 @@ class _ProductCardState extends State<ProductCard> {
                   ],
                 ),
                 // SizedBox(height: 5),
-                TitleText(
-                  text: model.name,
-                  fontSize: model.isSelected ? 16 : 14,
+                AutoSizeText(
+                   model.name,
+                  style: TextStyle( fontSize :model.isSelected ? 16 : 14),
                 ),
-                TitleText(
-                  text: model.category,
-                  fontSize: model.isSelected ? 14 : 12,
-                  color: LightColor.orange,
+                AutoSizeText(
+                   model.category,
+                  style: TextStyle( fontSize :model.isSelected ? 14 : 12, 
+                  color: LightColor.orange),
                 ),
-                TitleText(
-                  text: model.price.toString(),
-                  fontSize: model.isSelected ? 18 : 16,
+                AutoSizeText(
+                  model.price.toString(),
+                  style: TextStyle( fontSize : model.isSelected ? 10 : 1),
                 ),
               ],
             ),
@@ -111,4 +115,6 @@ class _ProductCardState extends State<ProductCard> {
       ),
     );
   }
+
+ 
 }

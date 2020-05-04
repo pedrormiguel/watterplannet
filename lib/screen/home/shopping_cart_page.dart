@@ -9,13 +9,15 @@ import 'package:watterplannet/theme/theme.dart';
 class ShopingCartPage extends StatelessWidget {
   const ShopingCartPage({Key key}) : super(key: key);
 
-  Widget _cartItems() {
-    return Column(children: AppData.cartList.map((x) => _item(x)).toList());
+  Widget _cartItems(BuildContext context) {
+    return Column(
+  
+      children: AppData.cartList.map((x) => _item(x,context)).toList());
   }
 
-  Widget _item(Product model) {
+  Widget _item(Product model, BuildContext context) {
     return Container(
-      height: 80,
+      height: MediaQuery.of(context).size.height * .15,
       child: Row(
         children: <Widget>[
           AspectRatio(
@@ -25,8 +27,7 @@ class ShopingCartPage extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomLeft,
                   child: Container(
-                    height: 70,
-                    width: 70,
+                    constraints: BoxConstraints.expand(),
                     child: Stack(
                       children: <Widget>[
                         Align(
@@ -41,11 +42,16 @@ class ShopingCartPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Positioned(
-                  left: -20,
-                  bottom: -20,
-                  child: Image.asset(model.image),
-                )
+                
+                Container(
+                  constraints: BoxConstraints.expand(),
+                  alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: AssetImage(model.image))))
               ],
             ),
           ),
@@ -70,15 +76,17 @@ class ShopingCartPage extends StatelessWidget {
                     ],
                   ),
                   trailing: Container(
-                    width: 35,
-                    height: 35,
+                    width: 35, //TODO
+                    height: 35,//TODO
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         color: LightColor.lightGrey.withAlpha(150),
                         borderRadius: BorderRadius.circular(10)),
                     child: TitleText(
-                      text: 'x${model.productID}',
+                      //text: 'x${model.productID}',
+                      text: 1.toString(), //TODO 
                       fontSize: 12,
+                    
                     ),
                   )))
         ],
@@ -135,9 +143,10 @@ class ShopingCartPage extends StatelessWidget {
       body : Container(
       padding: AppTheme.padding,
       child: SingleChildScrollView(
+        
         child: Column(
           children: <Widget>[
-            _cartItems(),
+            _cartItems(context),
             Divider(
               thickness: 1,
               height: 70,

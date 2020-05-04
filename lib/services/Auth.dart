@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:watterplannet/class/data.dart';
 
@@ -6,6 +5,10 @@ class Authentication {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String code;
+
+   void cargarDatos(){
+      AppData.getProduct();
+   }
 
   singAno() { 
     _auth.signInAnonymously();
@@ -15,8 +18,7 @@ class Authentication {
      try {
             AuthResult result = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
             FirebaseUser user = result.user;
-            // print(user.email + " "+ user.uid);
-            AppData.getProduct();
+            cargarDatos();
             return user;
 
      }catch (error){
@@ -25,8 +27,18 @@ class Authentication {
      }
   }
 
-  registerUser(String email, String password){
-    _auth.createUserWithEmailAndPassword(email: email, password: password);
+  registerUser(String email, String password) async{
+    try {
+          AuthResult result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
+          FirebaseUser user = result.user;
+          user.sendEmailVerification();
+          return user;
+
+    }catch(error){
+      messageError(error);
+      return code;
+    }
+    
   }
 
   void messageError(var e) {

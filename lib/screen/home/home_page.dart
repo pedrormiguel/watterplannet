@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:watterplannet/class/data.dart';
 import 'package:watterplannet/class/product.dart';
@@ -58,14 +57,6 @@ class _MyHomePageState extends State<HomePage> {
       width: AppTheme.fullWidth(context),
       height: AppTheme.fullWidth(context) * .7,
       child: gridSystemBuild(context),
-      // child: (Product.listOfAllProduct.length != 0)
-      //     ? gridSystem()
-      //     : Center(
-      //         child: Text(
-      //         "No hay productos",
-      //         textScaleFactor: 2,
-      //         textAlign: TextAlign.center,
-      //       )),
     );
   }
 
@@ -77,7 +68,7 @@ class _MyHomePageState extends State<HomePage> {
             mainAxisSpacing: 30,
             crossAxisSpacing: 20),
         padding: EdgeInsets.only(left: 20),
-        scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.horizontal ,
         children: Product.listOfAllProduct
             .map((product) => ProductCard(
                   product: product,
@@ -111,12 +102,10 @@ class _MyHomePageState extends State<HomePage> {
                     } 
                   break; 
 
-                  case "ConnectionState.done"   : {  
-                    return gridSystem();
-                     } 
+                  case "ConnectionState.done"   : return gridSystem();
                   break; 
     
-                  default: { return Text("data :" + snapshot.connectionState.toString()); } 
+                  default: return Text("data :" + snapshot.connectionState.toString()); 
                   break; 
                 } 
 
@@ -160,7 +149,9 @@ class _MyHomePageState extends State<HomePage> {
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(
+
       crossAxisAlignment: CrossAxisAlignment.start,
+
       children: <Widget>[_search(), _categoryWidget(), _productWidget()],
     )));
   }

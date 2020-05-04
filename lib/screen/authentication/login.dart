@@ -1,6 +1,9 @@
+
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:watterplannet/class/supplies.dart';
 import 'package:watterplannet/class/user.dart';
-import 'package:watterplannet/screen/home/home_page.dart';
 import 'package:watterplannet/screen/home/main_page.dart';
 import 'package:watterplannet/services/Auth.dart';
 import 'package:flutter/services.dart';
@@ -15,12 +18,21 @@ class Login extends StatefulWidget {
 class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   final GlobalKey<FormState> _loginKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUpKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _signUpAsSupplierKey = GlobalKey<FormState>();
 
   FlusBar flusBar = FlusBar();
 
   Authentication _auth = Authentication();
 
   String _email, _password, _address, _name, _lastName;
+
+  String _companyName,
+         _contactPhone,
+         _emailSupplier,
+         _passwordSupplier,
+         _addressSuplier,
+         _citySupplier;
+
   int _phoneNumber;
   User newUser;
 
@@ -33,25 +45,27 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
         fit: BoxFit.cover,
       ));
 
-  var headerofPage = Container(
+  Widget headerofPage(String title, String path) {
+    return Container(
+      height: 140,
     padding: EdgeInsets.only(top: 25.0, bottom: 20),
     child: Center(
       child: Column(children: <Widget>[
-        Icon(
-          Icons.headset_mic,
-          color: Colors.redAccent,
-          size: 50.0,
+        Flexible(
+          fit: FlexFit.tight,
+          child: Image.asset(path),
         ),
         SizedBox(
           height: 25,
         ),
-        Text(
-          'Create Account',
-          style: TextStyle(fontSize: 35),
+        AutoSizeText(
+          title.toUpperCase(),
+          style: TextStyle(fontSize:25),
         ),
       ]),
     ),
-  );
+  ); 
+  }
 
   String _loginEmail, _loginPassword;
 
@@ -173,35 +187,33 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                 alignment: Alignment.center,
                 child: new Row(
                   children: <Widget>[
-                    
-                    Flexible( child:
-                      new FlatButton(
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
-                        color: Colors.white,
-                        onPressed: () => gotoLogin(),
-                        child: new Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 20.0,
-                            horizontal: 20.0,
-                          ),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              new Expanded(
-                                child: Text(
-                                  "LOGIN",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.redAccent,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          ),
+                    Flexible(
+                        child: new FlatButton(
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
+                      color: Colors.white,
+                      onPressed: () => gotoLogin(),
+                      child: new Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20.0,
+                          horizontal: 20.0,
                         ),
-                      )),
-                    
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            new Expanded(
+                              child: Text(
+                                "LOGIN",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.redAccent,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )),
                   ],
                 ),
               )),
@@ -269,6 +281,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     children: <Widget>[
                       Expanded(
                         child: TextFormField(
+                          initialValue: "pedrormiguel@outlook.es",
                           obscureText: false,
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.emailAddress,
@@ -329,6 +342,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     children: <Widget>[
                       Expanded(
                         child: TextFormField(
+                          initialValue: "test123",
                           obscureText: true,
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.text,
@@ -419,451 +433,920 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   }
 
   Widget signUp() {
-    return Form(
-        key: _signUpKey,
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: customBackgroundPicture,
-          child: SingleChildScrollView(
-              child: new Column(children: <Widget>[
-            headerofPage,
-            Column(
-              children: <Widget>[
-                Row(
-                  //Label Nombre
+    return Scaffold(
+      body: Container(
+        child: Form(
+            key: _signUpKey,
+            child: Container(
+              decoration: customBackgroundPicture,
+              child: SingleChildScrollView(
+                  child: new Column(children: <Widget>[
+                headerofPage("Cuenta Usuario","assets/images/usuario.png"),
+                Column(
                   children: <Widget>[
-                    new Expanded(
+                    Row(
                       //Label Nombre
-                      child: new Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: new Text(
-                          'Nombre'.toUpperCase(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ), //Cabezera
-                Container(
-                  //Input Nombre
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                          color: Colors.blueAccent,
-                          width: 0.5,
-                          style: BorderStyle.solid),
-                    ),
-                  ),
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: new Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      new Expanded(
-                        child: TextFormField(
-                          obscureText: false,
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.text,
-                          onSaved: (value) => _name = value,
-                          validator: (value) {
-                            if (value.isEmpty || value.length < 6)
-                              return 'Favor de completar este campo con al menos 6 digitos';
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Pedro Miguel',
-                            hintStyle: TextStyle(color: Colors.blueGrey),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: 24.0,
-                ),
-
-                Row(
-                  //Label Apellido
-                  children: <Widget>[
-                    new Expanded(
-                      child: new Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: new Text(
-                          'Apellido'.toUpperCase(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ), //Cabezera
-                Container(
-                  //Input Apellido
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                          color: Colors.blueAccent,
-                          width: 0.5,
-                          style: BorderStyle.solid),
-                    ),
-                  ),
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: new Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      new Expanded(
-                        child: TextFormField(
-                          obscureText: false,
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.text,
-                          onSaved: (input) => _lastName = input,
-                          validator: (input) => input.isEmpty ||
-                                  input.length < 6
-                              ? 'Favor de completar campo con almenos 6 digitos'
-                              : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Ruiz Nunez',
-                            hintStyle: TextStyle(color: Colors.blueGrey),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: 24.0,
-                ),
-
-                Row(
-                  //Label Correo
-                  children: <Widget>[
-                    new Expanded(
-                      child: new Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: new Text(
-                          'Correo'.toUpperCase(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ), //Cabezera
-                Container(
-                  //Input Correo
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                          color: Colors.blueAccent,
-                          width: 0.5,
-                          style: BorderStyle.solid),
-                    ),
-                  ),
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: new Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      new Expanded(
-                        child: TextFormField(
-                          obscureText: false,
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.emailAddress,
-                          onSaved: (input) => _email = input,
-                          validator: (input) => input.isEmpty ||
-                                  input.length < 6
-                              ? 'Favor de completar campo con almenos 6 digitos'
-                              : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Example@live.com',
-                            hintStyle: TextStyle(color: Colors.blueGrey),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: 24.0,
-                ),
-
-                Row(
-                  //Label Contrasena
-                  children: <Widget>[
-                    new Expanded(
-                      child: new Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: new Text(
-                          'Contraseña'.toUpperCase(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ), //Cabezera
-                Container(
-                  //Input Contrasena
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                          color: Colors.blueAccent,
-                          width: 0.5,
-                          style: BorderStyle.solid),
-                    ),
-                  ),
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: new Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      new Expanded(
-                        child: TextFormField(
-                          obscureText: true,
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.visiblePassword,
-                          onSaved: (input) => _password = input,
-                          validator: (input) => input.isEmpty ||
-                                  input.length < 6
-                              ? 'Favor de completar campo con al menos 6 digitos'
-                              : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '*******',
-                            hintStyle: TextStyle(color: Colors.blueGrey),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: 24.0,
-                ),
-
-                Row(
-                  // Label Direccion
-                  children: <Widget>[
-                    Expanded(
-                      child: new Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: new Text(
-                          'Direccion'.toUpperCase(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ), //Cabezera
-                Container(
-                  // Input Direccion
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                          color: Colors.blueAccent,
-                          width: 0.5,
-                          style: BorderStyle.solid),
-                    ),
-                  ),
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: new Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      new Expanded(
-                        child: TextFormField(
-                          obscureText: false,
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.text,
-                          onSaved: (input) => _address = input,
-                          validator: (input) => input.isEmpty ||
-                                  input.length < 6
-                              ? 'Favor de completar campo con almenos 6 digitos'
-                              : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText:
-                                'Residencial Prado Oriental, Pimienta #35',
-                            hintStyle: TextStyle(color: Colors.blueGrey),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: 24.0,
-                ),
-
-                Row(
-                  //Label Telefono
-                  children: <Widget>[
-                    new Expanded(
-                      child: new Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: new Text(
-                          'Telefono'.toUpperCase(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ), //Cabezera
-                Container(
-                  //Input Telefono
-                  width: MediaQuery.of(context).size.width,
-                  margin:
-                      const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                          color: Colors.blueAccent,
-                          width: 0.5,
-                          style: BorderStyle.solid),
-                    ),
-                  ),
-                  padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                  child: new Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      new Expanded(
-                        child: TextFormField(
-                          obscureText: false,
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.phone,
-                          onSaved: (input) => _phoneNumber = int.parse(input),
-                          validator: (input) => input.isEmpty ||
-                                  input.length < 6
-                              ? 'Favor de completar campo con almenos 6 digitos'
-                              : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '809-345-6789',
-                            hintStyle: TextStyle(color: Colors.blueGrey),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  height: 24.0,
-                ),
-
-                Row(
-                  //Label for password fogotten
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: new FlatButton(
-                        child: new Text(
-                          "Already have an account?",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
-                            fontSize: 15.0,
-                          ),
-                          textAlign: TextAlign.end,
-                        ),
-                        onPressed: gotoLogin,
-                      ),
-                    ),
-                  ],
-                ),
-
-                Container(
-                  // Boton SIGN UP
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.only(
-                      left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
-                  alignment: Alignment.center,
-                  child: new Row(
-                    children: <Widget>[
-                      new Expanded(
-                        child: new FlatButton(
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0),
-                          ),
-                          color: Colors.redAccent,
-                          onPressed: signIn,
-                          child: new Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 20.0,
-                              horizontal: 20.0,
+                      children: <Widget>[
+                        new Expanded(
+                          //Label Nombre
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Nombre'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
                             ),
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Expanded(
-                                  child: Text(
-                                    "SIGN UP",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Nombre
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.text,
+                              onSaved: (value) => _name = value,
+                              validator: (value) {
+                                if (value.isEmpty || value.length < 6)
+                                  return 'Favor de completar este campo con al menos 6 digitos';
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Pedro Miguel',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24.0,
+                    ),
+
+                    Row(
+                      //Label Apellido
+                      children: <Widget>[
+                        new Expanded(
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Apellido'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Apellido
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.text,
+                              onSaved: (input) => _lastName = input,
+                              validator: (input) => input.isEmpty ||
+                                      input.length < 6
+                                  ? 'Favor de completar campo con almenos 6 digitos'
+                                  : null,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Ruiz Nunez',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24.0,
+                    ),
+
+                    Row(
+                      //Label Correo
+                      children: <Widget>[
+                        new Expanded(
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Correo'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Correo
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.emailAddress,
+                              onSaved: (input) => _email = input,
+                              validator: (input) => input.isEmpty ||
+                                      input.length < 6
+                                  ? 'Favor de completar campo con almenos 6 digitos'
+                                  : null,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Example@live.com',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24.0,
+                    ),
+
+                    Row(
+                      //Label Contrasena
+                      children: <Widget>[
+                        new Expanded(
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Contraseña'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Contrasena
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: true,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.visiblePassword,
+                              onSaved: (input) => _password = input,
+                              validator: (input) => input.isEmpty ||
+                                      input.length < 6
+                                  ? 'Favor de completar campo con al menos 6 digitos'
+                                  : null,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: '*******',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24.0,
+                    ),
+
+                    Row(
+                      // Label Direccion
+                      children: <Widget>[
+                        Expanded(
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Direccion'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      // Input Direccion
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.text,
+                              onSaved: (input) => _address = input,
+                              validator: (input) => input.isEmpty ||
+                                      input.length < 6
+                                  ? 'Favor de completar campo con almenos 6 digitos'
+                                  : null,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText:
+                                    'Residencial Prado Oriental, Pimienta #35',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24.0,
+                    ),
+
+                    Row(
+                      //Label Telefono
+                      children: <Widget>[
+                        new Expanded(
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Telefono'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Telefono
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.phone,
+                              onSaved: (input) =>
+                                  _phoneNumber = int.parse(input),
+                              validator: (input) => input.isEmpty ||
+                                      input.length < 6
+                                  ? 'Favor de completar campo con almenos 6 digitos'
+                                  : null,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: '809-345-6789',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24.0,
+                    ),
+
+                    Row(
+                      //Label for password fogotten
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: new FlatButton(
+                            child: new Text(
+                              "Already have an account?",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                              textAlign: TextAlign.end,
+                            ),
+                            onPressed: gotoLogin,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Container(
+                      // Boton SIGN UP
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
+                      alignment: Alignment.center,
+                      child: new Row(
+                        children: <Widget>[
+                          new Expanded(
+                            child: new FlatButton(
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0),
+                              ),
+                              color: Colors.redAccent,
+                              onPressed: signIn,
+                              child: new Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20.0,
+                                  horizontal: 20.0,
                                 ),
-                              ],
+                                child: new Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    new Expanded(
+                                      child: Text(
+                                        "SIGN UP",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ])),
+            )),
+      ),
+    );
+  }
+
+  Widget signUpAsSupplier() {
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        child: Form(
+            key: _signUpAsSupplierKey,
+            child: Container(
+              decoration: customBackgroundPicture,
+              child: SingleChildScrollView(
+                  child: new Column(children: <Widget>[
+                  headerofPage("Cuenta Empresa","assets/images/bussines.png"),   
+                Column(
+                  children: <Widget>[
+                    Row(
+                      //Label Nombre
+                      children: <Widget>[
+                        new Expanded(
+                          //Label Nombre
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Nombre'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
                             ),
                           ),
                         ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Nombre
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
                       ),
-                    ],
-                  ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.text,
+                              onSaved: (value) => _companyName = value,
+                              validator: (value) {
+                                if (value.isEmpty || value.length < 6)
+                                  return 'Favor de completar este campo con al menos 6 digitos';
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Nombre de la empresa',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24,
+                    ),
+                    
+                    Row(
+                      //Label Nombre
+                      children: <Widget>[
+                        new Expanded(
+                          //Label Nombre
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Numero Contacto'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Nombre
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.text,
+                              onSaved: (value) => _contactPhone = value,
+                              validator: (value) {
+                                if (value.isEmpty || value.length < 6)
+                                  return 'Favor de completar este campo con al menos 6 digitos';
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Contacto',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24,
+                    ),
+
+
+                    Row(
+                      //Label Nombre
+                      children: <Widget>[
+                        new Expanded(
+                          //Label Nombre
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Correo Empresarial'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Nombre
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.emailAddress,
+                              onSaved: (value) => _emailSupplier = value,
+                              validator: (value) {
+                                if (value.isEmpty || value.length < 6)
+                                  return 'Favor de completar este campo con al menos 6 digitos';
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Correo',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24,
+                    ),
+
+                    Row(
+                      //Label Nombre
+                      children: <Widget>[
+                        new Expanded(
+                          //Label Nombre
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Contraseña'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Nombre
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: true,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.emailAddress,
+                              onSaved: (value) => _passwordSupplier = value,
+                              validator: (value) {
+                                if (value.isEmpty || value.length < 6)
+                                  return 'Favor de completar este campo con al menos 6 digitos';
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Contraseña',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24,
+                    ),
+
+
+                    Row(
+                      //Label Nombre
+                      children: <Widget>[
+                        new Expanded(
+                          //Label Nombre
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Direccion'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Nombre
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.text,
+                              onSaved: (value) => _addressSuplier = value,
+                              validator: (value) {
+                                if (value.isEmpty || value.length < 6)
+                                  return 'Favor de completar este campo con al menos 6 digitos';
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Residencial, Calle #',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24,
+                    ),
+
+                    
+                    Row(
+                      //Label Nombre
+                      children: <Widget>[
+                        new Expanded(
+                          //Label Nombre
+                          child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Ciudad'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), //Cabezera
+                    Container(
+                      //Input Nombre
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 10.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 0.5,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: new Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          new Expanded(
+                            child: TextFormField(
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.text,
+                              onSaved: (value) => _citySupplier = value,
+                              validator: (value) {
+                                if (value.isEmpty || value.length < 6)
+                                  return 'Favor de completar este campo con al menos 6 digitos';
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Ciudad de ubicacion',
+                                hintStyle: TextStyle(color: Colors.blueGrey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 24,
+                    ),
+
+
+                    Row(
+                      //Label for password fogotten
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: new FlatButton(
+                            child: new Text(
+                              "Already have an account?",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                              textAlign: TextAlign.end,
+                            ),
+                            onPressed: gotoLogin,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Container(
+                      // Boton SIGN UP AS Supplier
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
+                      alignment: Alignment.center,
+                      child: new Row(
+                        children: <Widget>[
+                          new Expanded(
+                            child: new FlatButton(
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0),
+                              ),
+                              color: Colors.redAccent,
+                              onPressed: signInAsSupplier,
+                              child: new Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20.0,
+                                  horizontal: 20.0,
+                                ),
+                                child: new Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    new Expanded(
+                                      child: Text(
+                                        "SIGN UP",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ])),
-        ));
+              ])),
+            )),
+      ),
+    );
   }
 
   void logIn() async {
@@ -928,6 +1411,62 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
     // }
   }
 
+  void signInAsSupplier() async {
+  var outputFromEmailAccount;
+  
+    if (this._signUpAsSupplierKey.currentState.validate()) {
+
+      this._signUpAsSupplierKey.currentState.save();
+      
+
+       outputFromEmailAccount = await _auth.registerUser(_emailSupplier, _passwordSupplier);
+
+       if(outputFromEmailAccount.runtimeType != String && outputFromEmailAccount != null){
+
+               Supplies(
+                keyAccountUID: outputFromEmailAccount.uid,
+                companyName: _companyName.trim(),
+                contactPhone: _contactPhone.trim(),
+                email: _emailSupplier.trim(),
+                password: _passwordSupplier.trim(),
+                address: _addressSuplier.trim(),
+                city: _citySupplier.trim()
+                );
+
+               flusBar.getBar(context: context ,title: "Notificacion",message: "Cuenta de Empresa Creada.");
+               this._signUpAsSupplierKey.currentState.reset();
+       }
+       else {
+         flusBar.getBar(context: context ,title: "Notificacion",message: outputFromEmailAccount);
+         print(this._signUpAsSupplierKey.currentState);
+        return;
+       }
+
+
+    }
+
+  }
+
+  Widget wrapperForms(){
+
+    PageController _controllerForm =
+      new PageController(initialPage: 1, viewportFraction: 1.0);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Formulario"),
+      ),
+      body:Container(
+        child: PageView(
+          controller:_controllerForm,
+          physics: new AlwaysScrollableScrollPhysics(),
+          children: <Widget>[signUp(),signUpAsSupplier()],
+          scrollDirection: Axis.horizontal,
+        ),
+      )
+    );
+  }
+
   gotoLogin() {
     //controller_0To1.forward(from: 0.0);
     _controller.animateToPage(
@@ -949,60 +1488,64 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   Widget customTextField(
       var fieldC, String hintext, String header, bool isObscureText,
       [TextInputType typeofInput = TextInputType.text]) {
-    return Column(children: <Widget>[
-      Row(
-        children: <Widget>[
-          new Expanded(
-            child: new Padding(
-              padding: const EdgeInsets.only(left: 40.0),
-              child: new Text(
-                header.toUpperCase(),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.redAccent,
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ), //Cabezera
-      Container(
-        width: MediaQuery.of(context).size.width,
-        margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-                color: Colors.blueAccent, width: 0.5, style: BorderStyle.solid),
-          ),
-        ),
-        padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-        child: new Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
+    return Column(
+      children: <Widget>[
+        Row(
           children: <Widget>[
             new Expanded(
-              child: TextFormField(
-                obscureText: isObscureText,
-                textAlign: TextAlign.left,
-                keyboardType: typeofInput,
-                onSaved: (input) => setState(() => fieldC = input),
-                validator: (input) => validator(input),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: hintext,
-                  hintStyle: TextStyle(color: Colors.blueGrey),
+              child: new Padding(
+                padding: const EdgeInsets.only(left: 40.0),
+                child: new Text(
+                  header.toUpperCase(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,
+                    fontSize: 15.0,
+                  ),
                 ),
               ),
             ),
           ],
+        ), //Cabezera
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                  color: Colors.blueAccent,
+                  width: 0.5,
+                  style: BorderStyle.solid),
+            ),
+          ),
+          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+          child: new Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              new Expanded(
+                child: TextFormField(
+                  obscureText: isObscureText,
+                  textAlign: TextAlign.left,
+                  keyboardType: typeofInput,
+                  onSaved: (input) => setState(() => fieldC = input),
+                  validator: (input) => validator(input),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: hintext,
+                    hintStyle: TextStyle(color: Colors.blueGrey),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      Divider(
-        height: 24.0,
-      )
-    ]);
+        Divider(
+          height: 24.0,
+        )
+      ],
+    );
   }
 
   PageController _controller =
@@ -1012,13 +1555,12 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          height: MediaQuery.of(context).size.height,
           child: PageView(
-            controller: _controller,
-            physics: new AlwaysScrollableScrollPhysics(),
-            children: <Widget>[loginPage(), homePage(), signUp()],
-            scrollDirection: Axis.horizontal,
-          )),
+        controller: _controller,
+        physics: new AlwaysScrollableScrollPhysics(),
+        children: <Widget>[loginPage(), homePage(), wrapperForms()],
+        scrollDirection: Axis.horizontal,
+      )),
     );
   }
 }

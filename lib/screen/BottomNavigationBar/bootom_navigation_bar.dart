@@ -17,6 +17,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
 
   AnimationController _xController;
   AnimationController _yController;
+  
   @override
   void initState() {
     _xController = AnimationController(

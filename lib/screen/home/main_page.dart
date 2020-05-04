@@ -146,10 +146,12 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
+            //CustomBottomNavigationBar( onIconPresedCallback: onBottomIconPressed, )
             Positioned(
                 bottom: 0,
                 right: 0,
                 child: CustomBottomNavigationBar(
+                  key: context.widget.key,
                   onIconPresedCallback: onBottomIconPressed,
                 ))
           ],
