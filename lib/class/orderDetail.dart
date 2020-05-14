@@ -7,7 +7,7 @@ class OrderDetail {
   final String productID;
   final double amountOfUnits;
   final int    unitPrice;
-  //      double total; TODO Pensar en la manera de calcular total.
+  //     double total; TODO Pensar en la manera de calcular total.
   
   final DatabaseReference orderDetailRef = FirebaseData.database.reference () .child( NameDocumentsTable.tableDocumentOrderDetail ); 
 

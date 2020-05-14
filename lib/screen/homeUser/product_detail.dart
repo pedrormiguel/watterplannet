@@ -1,14 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:watterplannet/class/data.dart';
 import 'package:watterplannet/class/product.dart';
-import 'package:watterplannet/screen/home/title_text.dart';
+import 'package:watterplannet/screen/homeUser/title_text.dart';
 import 'package:watterplannet/theme/light_color.dart';
 import 'package:watterplannet/theme/theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:watterplannet/utils/FlushBart.dart';
-
 
 class ProductDetailPage extends StatefulWidget {
   ProductDetailPage({Key key}) : super(key: key);
@@ -21,8 +19,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage>
     with TickerProviderStateMixin {
-
-     String output = "Articulo agregado al carrito";
+  String output = "Articulo agregado al carrito";
 
   AnimationController controller;
   Animation<double> animation;
@@ -64,7 +61,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                 //isLiked = !isLiked;
               });
             },
-            child: _icon(widget.curretItem.isLiked ? Icons.favorite : Icons.favorite_border,
+            child: _icon(
+                widget.curretItem.isLiked
+                    ? Icons.favorite
+                    : Icons.favorite_border,
                 color: isLiked ? LightColor.red : LightColor.lightGrey,
                 size: 15,
                 padding: 12,
@@ -123,7 +123,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.35,
                   decoration: BoxDecoration(
-                    
                       image: DecorationImage(
                           fit: BoxFit.contain,
                           image: AssetImage(widget.curretItem.image)))))
@@ -209,7 +208,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      AutoSizeText(widget.curretItem.name, style:TextStyle(fontSize: 25)),
+                      AutoSizeText(widget.curretItem.name,
+                          style: TextStyle(fontSize: 25)),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
@@ -368,23 +368,22 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         AutoSizeText(
           widget.curretItem.description,
           maxLines: 10,
-            overflow: TextOverflow.ellipsis,),
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }
 
-  void addToListCart(Product model){
-
+  void addToListCart(Product model) {
     AppData.cartList.add(model);
-
   }
 
   FloatingActionButton _flotingButton() {
     return FloatingActionButton(
       onPressed: () {
         addToListCart(widget.curretItem);
-        widget.flusBar.getBar(
-            context: context, title: 'Notificacion', message: output);
+        widget.flusBar
+            .getBar(context: context, title: 'Notificacion', message: output);
       },
       backgroundColor: LightColor.orange,
       child: Icon(Icons.shopping_basket,
@@ -394,8 +393,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   @override
   Widget build(BuildContext context) {
-
-        widget.curretItem = ModalRoute.of(context).settings.arguments;
+    widget.curretItem = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       floatingActionButton: _flotingButton(),

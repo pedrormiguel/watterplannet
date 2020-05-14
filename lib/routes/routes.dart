@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watterplannet/screen/authentication/login.dart';
-import 'package:watterplannet/screen/home/home_page.dart';
-import 'package:watterplannet/screen/home/main_page.dart';
-import 'package:watterplannet/screen/home/product_detail.dart';
-import 'package:watterplannet/screen/home/shopping_cart_page.dart';
-import 'package:watterplannet/screen/wrapper.dart';
+import 'package:watterplannet/screen/homeBussines/formularioProductoActualizar.dart';
+import 'package:watterplannet/screen/homeBussines/formularioProductoCrear.dart';
+import 'package:watterplannet/screen/homeBussines/mainPageBussines.dart';
+import 'package:watterplannet/screen/homeUser/home_page.dart';
+import 'package:watterplannet/screen/homeUser/main_page.dart';
+import 'package:watterplannet/screen/homeUser/product_detail.dart';
+import 'package:watterplannet/screen/homeUser/shopping_cart_page.dart';
 
 Map<String, WidgetBuilder> getApplicationRoute() {
 
@@ -14,7 +16,11 @@ Map<String, WidgetBuilder> getApplicationRoute() {
       'home'        : (BuildContext context) => HomePage()  ,
       'detail'      : (BuildContext context) => ProductDetailPage(),
       'mainPage'    : (BuildContext context) => MainPage(),
-      'wrapper'     : (BuildContext context) => Wrapper(),
-      'shopingCart' : (BuildContext context ) => ShopingCartPage()
+      'shopingCart' : (BuildContext context ) => ShopingCartPage(),
+
+
+      'mainPageBussines'     : (BuildContext context) => MainPageBussines(),
+      'formCreateProduct'    : (BuildContext context) => FormularioProductoCrear(),
+      'formUpdateProduct'    : (BuildContext context) => FormularioProductoActualizar()
     };
 }

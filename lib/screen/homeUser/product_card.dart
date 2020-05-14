@@ -1,8 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:watterplannet/class/data.dart';
 import 'package:watterplannet/class/product.dart';
-import 'package:watterplannet/screen/home/title_text.dart';
 import 'package:watterplannet/theme/light_color.dart';
 
 class ProductCard extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watterplannet/screen/BottomNavigationBar/bootom_navigation_bar.dart';
-import 'package:watterplannet/screen/home/home_page.dart';
-import 'package:watterplannet/screen/home/shopping_cart_page.dart';
-import 'package:watterplannet/screen/home/title_text.dart';
+import 'package:watterplannet/screen/homeUser/home_page.dart';
+import 'package:watterplannet/screen/homeUser/shopping_cart_page.dart';
+import 'package:watterplannet/screen/homeUser/title_text.dart';
 import 'package:watterplannet/theme/light_color.dart';
 import 'package:watterplannet/theme/theme.dart';
 

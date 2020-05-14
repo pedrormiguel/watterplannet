@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:watterplannet/routes/routes.dart';
 
 void main() => runApp( DevicePreview( 
-   enabled: false,
+   enabled: true,
    builder: (conte) => MyApp()));
 
 class MyApp extends StatelessWidget {

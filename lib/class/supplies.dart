@@ -20,6 +20,9 @@ class Supplies {
     handleSubmit();
   }
 
+  
+  Supplies.fromMap({this.suppliesID,this.keyAccountUID, this.companyName, this.contactPhone, this.email, this.password, this.address, this.city});
+
   void handleSubmit() async {
     print(toJson());
     await suppliesRef.push().set(toJson());

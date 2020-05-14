@@ -24,6 +24,8 @@ class User  {
     handleSubmit();
   }
 
+   User.fromMap({this.userID,this.name,this.lastName,this.password,this.email,this.phoneNumber,this.address});
+
 
   void handleSubmit() async {
     print(toJson());
@@ -34,10 +36,8 @@ class User  {
        : userID       = snapshot.key,
          name         = snapshot.value["name"],
          lastName     = snapshot.value["lastName"],
-         //userName     = snapshot.value["userName"],
          password     = snapshot.value["password"],
          email        = snapshot.value["email"],
-         //isSuperAdmin = snapshot.value["isSuperAdmin"],
          phoneNumber  = snapshot.value["phoneNumber"],
          address      = snapshot.value["address"];
 
@@ -56,28 +56,3 @@ class User  {
 
 
 }
-
-
-/* 
-
-class Item {
-  String key;
-  String title;
-  String body;
-
-  Item(this.title, this.body);
-
-  Item.fromSnapshot(DataSnapshot snapshot)
-      : key = snapshot.key,
-        title = snapshot.value["title"],
-        body = snapshot.value["body"];
-
-  toJson() {
-    return {
-      "title": title,
-      "body": body,
-    };
-  }
-}
-
-*/

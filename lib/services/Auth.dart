@@ -4,6 +4,7 @@ import 'package:watterplannet/class/data.dart';
 class Authentication {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  static AuthResult result;
   String code;
 
    void cargarDatos(){
@@ -16,7 +17,7 @@ class Authentication {
 
   loginWithEmailAndPassword(String email, String password) async{
      try {
-            AuthResult result = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
+             result = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
             FirebaseUser user = result.user;
             cargarDatos();
             return user;
@@ -27,9 +28,13 @@ class Authentication {
      }
   }
 
+  logoutUser(){
+    _auth.signOut();
+  }
+
   registerUser(String email, String password) async{
     try {
-          AuthResult result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
+           result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
           FirebaseUser user = result.user;
           user.sendEmailVerification();
           return user;

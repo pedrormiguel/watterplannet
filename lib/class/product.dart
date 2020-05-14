@@ -169,4 +169,22 @@ class Product {
         category: "Agua Potable",
         unitInStock: 2);
   }
+
+  static Future<void> eliminarProduct(String id){
+    return productRef.child(id).remove();
+  } 
+
+  static Future<void> actualizarProduct({String id, String name,String category, String description, double price, int unitInStock }){
+
+    var toModify = {
+      "name": name,
+      "description": description,
+      "price": price,
+      "unitInStock": unitInStock,
+      "category": category,
+    };
+
+    return productRef.child(id).update(toModify);
+  } 
+
 }

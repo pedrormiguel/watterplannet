@@ -1,12 +1,11 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:watterplannet/class/FirebaseDatabase.dart';
 import 'package:watterplannet/class/supplies.dart';
 import 'package:watterplannet/class/user.dart';
-import 'package:watterplannet/screen/home/main_page.dart';
-import 'package:watterplannet/services/Auth.dart';
 import 'package:flutter/services.dart';
+import 'package:watterplannet/services/Auth.dart';
 import 'package:watterplannet/utils/FlushBart.dart';
 import 'package:watterplannet/utils/validators.dart';
 
@@ -22,19 +21,20 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
   FlusBar flusBar = FlusBar();
 
-  Authentication _auth = Authentication();
 
   String _email, _password, _address, _name, _lastName;
 
   String _companyName,
-         _contactPhone,
-         _emailSupplier,
-         _passwordSupplier,
-         _addressSuplier,
-         _citySupplier;
+      _contactPhone,
+      _emailSupplier,
+      _passwordSupplier,
+      _addressSuplier,
+      _citySupplier;
 
   int _phoneNumber;
+  Supplies userBussines;
   User newUser;
+  bool isAUser;
 
   var customBackgroundPicture = BoxDecoration(
       color: Colors.white,
@@ -48,26 +48,27 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   Widget headerofPage(String title, String path) {
     return Container(
       height: 140,
-    padding: EdgeInsets.only(top: 25.0, bottom: 20),
-    child: Center(
-      child: Column(children: <Widget>[
-        Flexible(
-          fit: FlexFit.tight,
-          child: Image.asset(path),
-        ),
-        SizedBox(
-          height: 25,
-        ),
-        AutoSizeText(
-          title.toUpperCase(),
-          style: TextStyle(fontSize:25),
-        ),
-      ]),
-    ),
-  ); 
+      padding: EdgeInsets.only(top: 25.0, bottom: 20),
+      child: Center(
+        child: Column(children: <Widget>[
+          Flexible(
+            fit: FlexFit.tight,
+            child: Image.asset(path),
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          AutoSizeText(
+            title.toUpperCase(),
+            style: TextStyle(fontSize: 25),
+          ),
+        ]),
+      ),
+    );
   }
 
   String _loginEmail, _loginPassword;
+  Authentication _auth = Authentication();
 
   @override
   void initState() {
@@ -281,7 +282,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     children: <Widget>[
                       Expanded(
                         child: TextFormField(
-                          initialValue: "pedrormiguel@outlook.es",
+                          initialValue: "t@o.com",
                           obscureText: false,
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.emailAddress,
@@ -397,7 +398,9 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         color: Colors.redAccent,
-                        onPressed: () => logIn(),
+                        onPressed: () async {
+                          await logIn();
+                        },
                         child: Container(
                           //Space
                           padding: const EdgeInsets.symmetric(
@@ -441,7 +444,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
               decoration: customBackgroundPicture,
               child: SingleChildScrollView(
                   child: new Column(children: <Widget>[
-                headerofPage("Cuenta Usuario","assets/images/usuario.png"),
+                headerofPage("Cuenta Usuario", "assets/images/usuario.png"),
                 Column(
                   children: <Widget>[
                     Row(
@@ -894,7 +897,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
               decoration: customBackgroundPicture,
               child: SingleChildScrollView(
                   child: new Column(children: <Widget>[
-                  headerofPage("Cuenta Empresa","assets/images/bussines.png"),   
+                headerofPage("Cuenta Empresa", "assets/images/bussines.png"),
                 Column(
                   children: <Widget>[
                     Row(
@@ -959,7 +962,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     Divider(
                       height: 24,
                     ),
-                    
+
                     Row(
                       //Label Nombre
                       children: <Widget>[
@@ -1022,7 +1025,6 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     Divider(
                       height: 24,
                     ),
-
 
                     Row(
                       //Label Nombre
@@ -1150,7 +1152,6 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                       height: 24,
                     ),
 
-
                     Row(
                       //Label Nombre
                       children: <Widget>[
@@ -1214,7 +1215,6 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                       height: 24,
                     ),
 
-                    
                     Row(
                       //Label Nombre
                       children: <Widget>[
@@ -1277,7 +1277,6 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     Divider(
                       height: 24,
                     ),
-
 
                     Row(
                       //Label for password fogotten
@@ -1349,7 +1348,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
     );
   }
 
-  void logIn() async {
+  Future<void> logIn() async {
     var output;
 
     if (_loginKey.currentState.validate()) {
@@ -1358,20 +1357,94 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
       output =
           await _auth.loginWithEmailAndPassword(_loginEmail, _loginPassword);
 
-      if (output.runtimeType == String) {
+      if (output.runtimeType != String && output != null) {
+
+        userBussines = await getUser(output.email);
+
+        switch (isAUser) {
+          case false:
+            print(userBussines.companyName);
+            Navigator.pushReplacementNamed(context, "mainPageBussines", arguments: output);
+            break;
+          case true:
+            Navigator.pushReplacementNamed(context, "mainPage", arguments: output);
+            break;
+          default:
+        }
+
+        _loginKey.currentState.reset();
+      } else {
         flusBar.getBar(
             context: context, title: 'Notificacion', message: output);
-      } else {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) => MainPage()),
-            (Route<dynamic> route) => false);
       }
-      //print(output.isEmailVerified);
-
-    } else {
-      print('faliled saving the data from the form');
     }
+  }
+
+  Future<Supplies> getUser(String email) async {
+
+    DataSnapshot p = await FirebaseData.database
+        .reference()
+        .child("supplies")
+        .orderByChild("email")
+        .equalTo(email)
+        .limitToFirst(1)
+        .once();
+
+    if (p.value != null) {
+
+      Map<dynamic, dynamic> values = p.value;
+      Supplies user;
+
+      values.forEach((key, value) {
+        user = Supplies.fromMap(
+            suppliesID: key,
+            companyName: value["companyName"],
+            address: value["address"],
+            city: value["city"],
+            contactPhone: value["contactPhone"],
+            email: value["email"],
+            keyAccountUID: value["keyAccountUID"],
+            password: value["password"]);
+      });
+
+      isAUser = false;
+
+      return user;
+    }
+    else
+    {
+        p = await FirebaseData.database
+        .reference()
+        .child("USER")
+        .orderByChild("email")
+        .equalTo(email)
+        .limitToFirst(1)
+        .once();
+
+        Map<dynamic, dynamic> values = p.value;
+
+        values.forEach((key, value) {
+
+          newUser = User.fromMap(
+
+          userID:       key,
+          address:      value["address"],
+          email:        value["email"],
+          lastName:     value["lastName"],
+          name:         value["name"],
+          password:     value["password"],
+          phoneNumber:  value["phoneNumber"]
+          
+          );
+
+         });
+
+        
+
+        isAUser = true;
+    }
+
+
   }
 
   void signIn() {
@@ -1387,7 +1460,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
           address: this._address.trim(),
           phoneNumber: this._phoneNumber.toString().trim());
 
-      var outputFromEmailAccount = _auth.registerUser(_email, _password);
+      var outputFromEmailAccount =  _auth.registerUser(_email, _password);
 
       print(output);
       print(outputFromEmailAccount);
@@ -1412,65 +1485,73 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   }
 
   void signInAsSupplier() async {
-  var outputFromEmailAccount;
-  
+    var outputFromEmailAccount;
+
     if (this._signUpAsSupplierKey.currentState.validate()) {
-
       this._signUpAsSupplierKey.currentState.save();
-      
 
-       outputFromEmailAccount = await _auth.registerUser(_emailSupplier, _passwordSupplier);
+      outputFromEmailAccount =
+          await _auth.registerUser(_emailSupplier, _passwordSupplier);
 
-       if(outputFromEmailAccount.runtimeType != String && outputFromEmailAccount != null){
+      if (outputFromEmailAccount.runtimeType != String &&
+          outputFromEmailAccount != null) {
+        Supplies(
+            keyAccountUID: outputFromEmailAccount.uid,
+            companyName: _companyName.trim(),
+            contactPhone: _contactPhone.trim(),
+            email: _emailSupplier.trim(),
+            password: _passwordSupplier.trim(),
+            address: _addressSuplier.trim(),
+            city: _citySupplier.trim());
 
-               Supplies(
-                keyAccountUID: outputFromEmailAccount.uid,
-                companyName: _companyName.trim(),
-                contactPhone: _contactPhone.trim(),
-                email: _emailSupplier.trim(),
-                password: _passwordSupplier.trim(),
-                address: _addressSuplier.trim(),
-                city: _citySupplier.trim()
-                );
-
-               flusBar.getBar(context: context ,title: "Notificacion",message: "Cuenta de Empresa Creada.");
-               this._signUpAsSupplierKey.currentState.reset();
-       }
-       else {
-         flusBar.getBar(context: context ,title: "Notificacion",message: outputFromEmailAccount);
-         print(this._signUpAsSupplierKey.currentState);
+        flusBar.getBar(
+            context: context,
+            title: "Notificacion",
+            message: "Cuenta de Empresa Creada.");
+        this._signUpAsSupplierKey.currentState.reset();
+      } else {
+        flusBar.getBar(
+            context: context,
+            title: "Notificacion",
+            message: outputFromEmailAccount);
+        print(this._signUpAsSupplierKey.currentState);
         return;
-       }
-
-
+      }
     }
-
   }
 
-  Widget wrapperForms(){
-
+  Widget wrapperForms() {
     PageController _controllerForm =
-      new PageController(initialPage: 1, viewportFraction: 1.0);
+        new PageController(initialPage: 0, viewportFraction: 1.0);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Formulario"),
-      ),
-      body:Container(
-        child: PageView(
-          controller:_controllerForm,
-          physics: new AlwaysScrollableScrollPhysics(),
-          children: <Widget>[signUp(),signUpAsSupplier()],
-          scrollDirection: Axis.horizontal,
+        appBar: AppBar(
+          title: Text("Formulario"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.backspace),
+              alignment: Alignment.center,
+              tooltip: "",
+              onPressed: () {
+                gotoLogin(1);
+              },
+            )
+          ],
         ),
-      )
-    );
+        body: Container(
+          child: PageView(
+            controller: _controllerForm,
+            physics: new AlwaysScrollableScrollPhysics(),
+            children: <Widget>[signUp(), signUpAsSupplier()],
+            scrollDirection: Axis.horizontal,
+          ),
+        ));
   }
 
-  gotoLogin() {
+  gotoLogin([int page = 0]) {
     //controller_0To1.forward(from: 0.0);
     _controller.animateToPage(
-      0,
+      page,
       duration: Duration(milliseconds: 800),
       curve: Curves.bounceOut,
     );
@@ -1486,7 +1567,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   }
 
   Widget customTextField(
-      var fieldC, String hintext, String header, bool isObscureText,
+      var fieldC, String hintext, String header, bool isObscureText,int minimunLength,
       [TextInputType typeofInput = TextInputType.text]) {
     return Column(
       children: <Widget>[
@@ -1530,7 +1611,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                   textAlign: TextAlign.left,
                   keyboardType: typeofInput,
                   onSaved: (input) => setState(() => fieldC = input),
-                  validator: (input) => validator(input),
+                  validator: (input) => validator(input,minimunLength),
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: hintext,
@@ -1549,7 +1630,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   }
 
   PageController _controller =
-      new PageController(initialPage: 1, viewportFraction: 1.0);
+      new PageController(initialPage: 0, viewportFraction: 1.0);
 
   @override
   Widget build(BuildContext context) {

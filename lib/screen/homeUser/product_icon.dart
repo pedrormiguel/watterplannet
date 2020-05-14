@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watterplannet/class/category.dart';
-import 'package:watterplannet/screen/home/title_text.dart';
+import 'package:watterplannet/screen/homeUser/title_text.dart';
 import 'package:watterplannet/theme/light_color.dart';
 import 'package:watterplannet/theme/theme.dart';
 
@@ -8,14 +8,12 @@ class ProducIcon extends StatelessWidget {
   // final String imagePath;
   // final String text;
   // final bool isSelected;
-  final  Category model;
-  ProducIcon({Key key,this.model})
-      : super(key: key);
+  final Category model;
+  ProducIcon({Key key, this.model}) : super(key: key);
 
   Widget build(BuildContext context) {
-    return model.id == null ? Container(width: 5,)
-    : Container(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 15),
       padding: AppTheme.hPadding,
       alignment: Alignment.center,
       height: 40,
@@ -27,18 +25,24 @@ class ProducIcon extends StatelessWidget {
             width: model.isSelected ? 2 : 1),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: model.isSelected ?  Color(0xfffbf2ef) : Colors.white,
-             blurRadius: 10,
+              color: model.isSelected ? Color(0xfffbf2ef) : Colors.white,
+              blurRadius: 10,
               spreadRadius: 5,
-              offset: Offset(5,5)
-              ),
+              offset: Offset(5, 5)),
         ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          model.image != null ? Image.asset(model.image) : SizedBox(),
-          model.name == null ? Container()
-          : Container(
+          SafeArea(
+            child: Container(
+                width: MediaQuery.of(context).size.width * 0.09,
+                height: MediaQuery.of(context).size.height * 0.2,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.contain, image: AssetImage(model.image)))),
+          ),
+          Container(
             child: TitleText(
               text: model.name,
               fontWeight: FontWeight.w700,

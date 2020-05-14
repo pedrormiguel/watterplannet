@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:watterplannet/class/data.dart';
 import 'package:watterplannet/class/product.dart';
-import 'package:watterplannet/screen/home/title_text.dart';
+import 'package:watterplannet/screen/homeUser/title_text.dart';
 import 'package:watterplannet/theme/light_color.dart';
 import 'package:watterplannet/theme/theme.dart';
 

@@ -21,14 +21,9 @@ class AppData {
   static List<Product> cartList = [];
 
   static List<Category> categoryList = [
-    Category(
-        id: 1,
-        price: 20,
-        name: "Sneakers",
-        image: 'assets/images/shoe_thumb_2.png',
-        isSelected: true),
-    Category(id: 2, price: 20,name: "Jacket", image: 'assets/images/jacket.png'),
-    Category(id: 3, price: 20,name: "Watch", image: 'assets/images/watch.png'),
+    Category(id: 1,price: 20,name: "Pequeño",image: 'assets/images/size.png', isSelected: true),
+    Category(id: 2, price: 20,name: "Mediano", image: 'assets/images/size.png'),
+    Category(id: 3, price: 20,name: "Grande", image: 'assets/images/size.png'),
   ];
 
   static List<String> showThumbnailList = [
