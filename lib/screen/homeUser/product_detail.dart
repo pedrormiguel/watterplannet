@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watterplannet/class/data.dart';
 import 'package:watterplannet/class/product.dart';
+import 'package:watterplannet/class/shoppingCart.dart';
 import 'package:watterplannet/screen/homeUser/title_text.dart';
 import 'package:watterplannet/theme/light_color.dart';
 import 'package:watterplannet/theme/theme.dart';
@@ -375,7 +376,22 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   }
 
   void addToListCart(Product model) {
-    AppData.cartList.add(model);
+  
+      Item itemSelecte = Item(product: model, cuantity: 1);
+      bool hasItem = false;
+
+      for (var i = 0; i < AppData.cartList.itemSelect.length; i++) {
+        String id = AppData.cartList.itemSelect.elementAt(i).product.productID;
+
+        if (id == model.productID) {
+            AppData.cartList.itemSelect.elementAt(i).cuantity ++;  
+            hasItem != hasItem;
+        return;
+        }
+      }
+
+      if(!hasItem)
+      AppData.cartList.itemSelect.add(itemSelecte);
   }
 
   FloatingActionButton _flotingButton() {

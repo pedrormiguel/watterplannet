@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:watterplannet/routes/routes.dart';
 
 void main() => runApp( DevicePreview( 
-   enabled: true,
+   enabled: false,
    builder: (conte) => MyApp()));
 
 class MyApp extends StatelessWidget {
@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: getApplicationRoute() ,
-
     );
   }
 }

@@ -7,15 +7,26 @@ import 'package:watterplannet/theme/light_color.dart';
 import 'package:watterplannet/theme/theme.dart';
 
 class ShopingCartPage extends StatelessWidget {
+
+
   const ShopingCartPage({Key key}) : super(key: key);
 
   Widget _cartItems(BuildContext context) {
     return Column(
   
-      children: AppData.cartList.map((x) => _item(x,context)).toList());
+      // children: AppData.cartList.itemSelect 
+      //   .map( 
+      //   (x) => x.forEach((product, cantidad) => _item(product, cantidad ,context)) ).toList()
+      //   );
+      children: AppData.cartList.itemSelect.map(
+
+        (e) => _item(e.product, e.cuantity, context)
+        
+        ).toList()
+  );
   }
 
-  Widget _item(Product model, BuildContext context) {
+  Widget _item(Product model, int cantidad , BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * .15,
       child: Row(
@@ -84,9 +95,8 @@ class ShopingCartPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                     child: TitleText(
                       //text: 'x${model.productID}',
-                      text: 1.toString(), //TODO 
+                      text: cantidad.toString(), //TODO 
                       fontSize: 12,
-                    
                     ),
                   )))
         ],
@@ -99,7 +109,7 @@ class ShopingCartPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         TitleText(
-          text: '${AppData.cartList.length} Items',
+          text: '${AppData.cartList.itemSelect.length} Items',
           color: LightColor.grey,
           fontSize: 14,
           fontWeight: FontWeight.w500,
@@ -131,8 +141,8 @@ class ShopingCartPage extends StatelessWidget {
 
   double getPrice() {
     double price = 0;
-    AppData.cartList.forEach((x) {
-      price += x.price * 2 ; // TODO Verificar calculo que no sea fijo
+    AppData.cartList.itemSelect.forEach( (x) {
+           price += x.product.price * x.cuantity ;        
     });
     return price;
   }
@@ -145,6 +155,7 @@ class ShopingCartPage extends StatelessWidget {
       child: SingleChildScrollView(
         
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             _cartItems(context),
             Divider(

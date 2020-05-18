@@ -140,7 +140,8 @@ class _MainPageState extends State<MainPage> {
                                 ? HomePage()
                                 : Align(
                                     alignment: Alignment.topCenter,
-                                    child: ShopingCartPage(),
+                                    child: 
+                                    ShopingCartPage(),
                                   )))
                   ],
                 ),

@@ -1,3 +1,5 @@
+import 'package:watterplannet/class/shoppingCart.dart';
+
 import 'category.dart';
 import 'product.dart';
 
@@ -18,7 +20,7 @@ class AppData {
   // Lista que muestra el menu.
 
   // Lista que muestra los articulos del carrito.
-  static List<Product> cartList = [];
+  static ShoppingCart cartList = ShoppingCart();
 
   static List<Category> categoryList = [
     Category(id: 1,price: 20,name: "Pequeño",image: 'assets/images/size.png', isSelected: true),
