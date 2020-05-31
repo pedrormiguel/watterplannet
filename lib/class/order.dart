@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:watterplannet/class/Enums/nameDocumentsTable.dart';
 import 'package:watterplannet/class/Enums/statusOfOrders.dart';
+import 'package:watterplannet/class/Enums/statusToShow.dart';
 import 'package:watterplannet/class/FirebaseDatabase.dart';
 import 'package:watterplannet/class/orderDetail.dart';
 import 'package:watterplannet/utils/idGenerators.dart';
@@ -20,6 +21,7 @@ class Order {
 
 
   String orderStatus;
+  String statusToShowOrder;
   // String orderShipperId;
 
    static DatabaseReference orderRef = FirebaseData.database.reference () .child(NameDocumentsTable.tableDocumentOrder);
@@ -29,6 +31,7 @@ class Order {
      this.orderDateBuy = DateTime.now();
      this.orderIDOrderDetailId = IdGenerators.createCryptoRandomString();
      this.orderStatus = StatusOfOrders.orderStatus[1];
+     this.statusToShowOrder = StatusToShowOrder.statusActive;
 
      this.orderDetail = new OrderDetail(orderIDOrderDetailId: this.orderIDOrderDetailId,orderDetailProduct: this.orderDetailProduct);
     handleSubmit();
@@ -45,6 +48,7 @@ class Order {
          userID                 = value["userID"],
          orderDateBuy           = DateTime.parse(value["orderDateBuy"]),
          orderStatus            = value["orderStatus"],
+         statusToShowOrder      = value["statusToShowOrder"],
          orderShipToAddres      = value["orderShipToAddres"];
 
   Order.fromSnapshot( DataSnapshot snapshot)
@@ -53,6 +57,7 @@ class Order {
          userID                 = snapshot.value["userID"],
          orderDateBuy           = snapshot.value["orderDateBuy"],
          orderStatus            = snapshot.value["orderStatus"],
+         statusToShowOrder      = snapshot.value["statusToShowOrder"],
          orderShipToAddres      = snapshot.value["orderShipToAddres"];
 
   static Future<Order> getOrder(String key, dynamic value) async {
@@ -72,7 +77,9 @@ class Order {
 
       var p = await getOrder(key, value );
 
-      orderList.add(p);
+            if(p.statusToShowOrder == StatusToShowOrder.statusActive)
+            orderList.add(p); 
+
      });
 
     return orderList;
@@ -83,6 +90,15 @@ class Order {
     return "Fecha de Orden ${this.orderDateBuy.day}/${this.orderDateBuy.month}/${this.orderDateBuy.year} ";
   }
 
+  Future<void> changeStatusToNotShowOrder(String id) async {
+
+    var toModify = {
+      "statusToShowOrder":StatusToShowOrder.statusNoActive
+    };
+
+    return await orderRef.child(id).update(toModify);
+  }
+
   toJson() 
   {
     return 
@@ -91,7 +107,8 @@ class Order {
         "userID"                : userID,
         "orderDateBuy"          : orderDateBuy.toString(),
         "orderShipToAddres"     : orderShipToAddres,
-        "orderStatus"           : orderStatus
+        "orderStatus"           : orderStatus,
+        "statusToShowOrder"     : statusToShowOrder
     };
   }
 
