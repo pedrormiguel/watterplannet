@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:watterplannet/class/FirebaseDatabase.dart';
-import 'package:watterplannet/class/data.dart';
 
 class Product {
   String productID;
@@ -95,8 +94,6 @@ class Product {
   }
 
   static void getAllTheProduct() async {
-   // creatExample();
-
     Map<dynamic, dynamic> valuesMap;
     Product.listOfAllProduct = new List<Product>();
 
@@ -138,36 +135,6 @@ class Product {
     } );
 
 
-  }
-
-  static void creatExample() {
-
-    Product(
-        suppliesID: "0",
-        description: "Agua pequenia 12 onzas",
-        name: 'Botella Pequenia',
-        price: 10.00,
-        image: AppData.small_tilt_shoe_1,
-        category: "Agua Potable",
-        unitInStock: 2);
-
-    Product(
-        suppliesID: "0",
-        description: "Agua mediana 24 onzas",
-        name: 'Botella Mediana',
-        price: 35.00,
-        image: AppData.small_tilt_shoe_2,
-        category: "Agua Potable",
-        unitInStock: 2);
-
-    Product(
-        suppliesID: "0",
-        description: "Agua grande 50 onzas",
-        name: 'Botella Grande',
-        price: 40.00,
-        image: AppData.small_tilt_shoe_3,
-        category: "Agua Potable",
-        unitInStock: 2);
   }
 
   static Future<void> eliminarProduct(String id){

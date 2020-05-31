@@ -1,36 +1,47 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:watterplannet/class/Enums/nameDocumentsTable.dart';
 import 'package:watterplannet/class/FirebaseDatabase.dart';
+import 'package:watterplannet/class/orderDetailProduct.dart';
 
 class OrderDetail {
-        String orderDetailID;
-  final String productID;
-  final double amountOfUnits;
-  final int    unitPrice;
-  //     double total; TODO Pensar en la manera de calcular total.
-  
-  final DatabaseReference orderDetailRef = FirebaseData.database.reference () .child( NameDocumentsTable.tableDocumentOrderDetail ); 
+  String orderDetailID;
+  final String orderIDOrderDetailId;
 
-  OrderDetail({this.productID, this.amountOfUnits, this.unitPrice}){
-      handleSubmit();
+  List<OrderDetailProduct> orderDetailProduct;
+
+  final DatabaseReference orderDetailRef = FirebaseData.database
+      .reference()
+      .child(NameDocumentsTable.tableDocumentOrderDetail);
+
+  OrderDetail({this.orderIDOrderDetailId,this.orderDetailProduct}) {
+    handleSubmit();
   }
 
-  void handleSubmit() async {
-    print( toJson() );
+  Future<void> handleSubmit() async =>
     await orderDetailRef.push().set(toJson());
-  }
-
-  OrderDetail.fromSnapshot( DataSnapshot snapshot)
-       : orderDetailID      = snapshot.key,
-         productID          = snapshot.value["productID"],
-         amountOfUnits      = snapshot.value["amountOfUnits"],
-         unitPrice          = snapshot.value["unitPrice"];
 
   toJson() {
-    return {
-        "productID"         : productID,
-        "amountOfUnits"     : amountOfUnits,
-        "unitPrice"         : unitPrice
+    return 
+    {
+      "orderIDOrderDetailId"  : orderIDOrderDetailId,
+      "products" : toJsonProductOrder()
     };
   }
+
+  toJsonProductOrder() {
+    var p = List<Map<String, Map<String, dynamic>>>();
+
+      orderDetailProduct.forEach((element) {
+        p.add({
+          element.productID: {
+            "amountOfUnits": element.amountOfUnits,
+            "unitPrice": element.unitPrice
+          }
+        });
+      });
+
+      return p;
+    
+  }
+
 }

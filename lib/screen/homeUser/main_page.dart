@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watterplannet/screen/BottomNavigationBar/bootom_navigation_bar.dart';
 import 'package:watterplannet/screen/homeUser/home_page.dart';
+import 'package:watterplannet/screen/homeUser/orderList.dart';
 import 'package:watterplannet/screen/homeUser/shopping_cart_page.dart';
 import 'package:watterplannet/screen/homeUser/title_text.dart';
 import 'package:watterplannet/theme/light_color.dart';
@@ -10,6 +11,8 @@ class MainPage extends StatefulWidget {
   MainPage({Key key, this.title}) : super(key: key);
 
   final String title;
+  static int selectWidget = 0;
+  Widget p ;
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -17,6 +20,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool isHomePageSelected = true;
+  
 
   Widget _appBar() {
     return Container(
@@ -31,7 +35,6 @@ class _MainPageState extends State<MainPage> {
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(13)),
             child: Container(
-              
               decoration: BoxDecoration(
                 color: Theme.of(context).backgroundColor,
                 boxShadow: <BoxShadow>[
@@ -96,15 +99,28 @@ class _MainPageState extends State<MainPage> {
   }
 
   void onBottomIconPressed(int index) {
-    if (index == 0 || index == 1) {
+
+        
+    if (index == 0 ) {
       setState(() {
+         widget.p = HomePage();
         isHomePageSelected = true;
       });
-    } else {
+    } else if(index == 1) {
       setState(() {
+        widget.p = ShopingCartPage();
         isHomePageSelected = false;
       });
+    } else if( index ==2 ) {
+      setState(() {
+        widget.p = OrderList();
+      });
     }
+    else 
+      setState(() {
+        widget.p = Text('PAGE 3');
+      });
+
   }
 
   @override
@@ -116,14 +132,14 @@ class _MainPageState extends State<MainPage> {
           children: <Widget>[
             SingleChildScrollView(
               child: Container(
-                height: AppTheme.fullHeight(context) - 50,
+                height: AppTheme.fullHeight(context) ,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                   colors: [
                     Color(0xfffbfbfb),
                     Color(0xfff7f7f7),
                   ],
-                  begin: Alignment.topCenter,
+                 begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 )),
                 child: Column(
@@ -136,18 +152,11 @@ class _MainPageState extends State<MainPage> {
                             duration: Duration(milliseconds: 300),
                             switchInCurve: Curves.easeInToLinear,
                             switchOutCurve: Curves.easeOutBack,
-                            child: isHomePageSelected
-                                ? HomePage()
-                                : Align(
-                                    alignment: Alignment.topCenter,
-                                    child: 
-                                    ShopingCartPage(),
-                                  )))
-                  ],
+                            child: widget.p == null ? HomePage() : widget.p,
+                        ))],
                 ),
               ),
             ),
-            //CustomBottomNavigationBar( onIconPresedCallback: onBottomIconPressed, )
             Positioned(
                 bottom: 0,
                 right: 0,

@@ -7,6 +7,7 @@ class   NameDocumentsTable {
  static const String tableDocumentProductSupplier = "PRODUCTSUPPLIER";
  static const String tableDocumentOrder = "ORDER";
  static const String tableDocumentOrderDetail = "ORDERDETAIL";
+ static const String tableDocumentOrderDetailProduct = "ORDERDETAILPRODUCT";
 
   // static const String tableDocument
 }

@@ -392,6 +392,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
       if(!hasItem)
       AppData.cartList.itemSelect.add(itemSelecte);
+      int position =  AppData.cartList.itemSelect.length - 1;
+      AppData.cartList.itemSelect.elementAt(position).positionList = position;
   }
 
   FloatingActionButton _flotingButton() {

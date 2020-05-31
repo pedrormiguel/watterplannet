@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:watterplannet/class/Enums/nameDocumentsTable.dart';
 import 'FirebaseDatabase.dart';
 
 class Supplies { 
@@ -13,7 +14,7 @@ class Supplies {
   final String city;
 
 
-  final   DatabaseReference suppliesRef = FirebaseData.database.reference().child('supplies');
+  final   DatabaseReference suppliesRef = FirebaseData.database.reference().child(NameDocumentsTable.tableDocumentSupplies);
 
 
   Supplies({this.keyAccountUID, this.companyName, this.contactPhone, this.email, this.password, this.address, this.city}) {

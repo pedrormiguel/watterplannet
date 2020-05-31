@@ -23,6 +23,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
 
   String _email, _password, _address, _name, _lastName;
+  String correo = "pedrormiguel@outlook.es";
 
   String _companyName,
       _contactPhone,
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
   int _phoneNumber;
   Supplies userBussines;
-  User newUser;
+  static User newUser;
   bool isAUser;
 
   var customBackgroundPicture = BoxDecoration(
@@ -282,7 +283,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                     children: <Widget>[
                       Expanded(
                         child: TextFormField(
-                          initialValue: "t@o.com",
+                          initialValue: correo,
                           obscureText: false,
                           textAlign: TextAlign.left,
                           keyboardType: TextInputType.emailAddress,
@@ -1005,7 +1006,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                             child: TextFormField(
                               obscureText: false,
                               textAlign: TextAlign.left,
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.phone,
                               onSaved: (value) => _contactPhone = value,
                               validator: (value) {
                                 if (value.isEmpty || value.length < 6)
@@ -1468,20 +1469,6 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
       print(this._signUpKey.currentState);
     }
 
-    // if(_signUpKey.currentState.validate()){
-    //   _signUpKey.currentState.save();
-
-    //     var output = await service.signWithEmailAndPassword(_email, _password);
-
-    //     if(output.runtimeType == String){
-    //        flusBar.getBar(context: context,title: 'Notificacion',message: output.toString()); //ToDo
-    //     }
-    //     else{
-    //       flusBar.getBar(context: context,title: 'Notificacion',message: "Usuario Creado con Exito, ver correo."); //ToDo
-    //       _signUpKey.currentState.reset();
-    //     }
-
-    // }
   }
 
   void signInAsSupplier() async {

@@ -12,9 +12,11 @@ class FlusBar extends StatelessWidget {
   }
 
 
- Widget getBar({BuildContext context,String title,String message}) {
+ Widget getBar({BuildContext context,String title="Notification",String message}) {
 
     return Flushbar(
+      margin: EdgeInsets.all(8),
+      borderRadius: 8,
       title: title,
       message: message,
       backgroundGradient: LinearGradient(colors: [Colors.teal, Colors.red],),

@@ -5,6 +5,7 @@ class Authentication {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   static AuthResult result;
+  static String uid;
   String code;
 
    void cargarDatos(){
@@ -17,8 +18,9 @@ class Authentication {
 
   loginWithEmailAndPassword(String email, String password) async{
      try {
-             result = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
+            result = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
             FirebaseUser user = result.user;
+            uid = user.uid;
             cargarDatos();
             return user;
 
