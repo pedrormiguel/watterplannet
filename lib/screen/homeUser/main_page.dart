@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watterplannet/screen/BottomNavigationBar/bootom_navigation_bar.dart';
+import 'package:watterplannet/screen/homeBussines/mainPageBussines.dart';
 import 'package:watterplannet/screen/homeUser/home_page.dart';
 import 'package:watterplannet/screen/homeUser/orderList.dart';
 import 'package:watterplannet/screen/homeUser/shopping_cart_page.dart';
@@ -100,6 +101,7 @@ class _MainPageState extends State<MainPage> {
 
   void onBottomIconPressed(int index) {
 
+      
         
     if (index == 0 ) {
       setState(() {
@@ -126,6 +128,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //drawer: drawerSupplier(),
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
@@ -169,4 +172,35 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+
+  Widget drawerSupplier() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+            accountEmail: Text("MainPageBussines.perfil.uid"),
+            accountName: Text("MainPageBussines.perfil.email"),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+          ),
+          drawerOptions("Carrito de Compras", Icon(Icons.filter_none),
+              () => Navigator.pushNamed(context, 'shopingCart')),
+          drawerOptions('Cerrar sesion', Icon(Icons.exit_to_app),
+              () => Navigator.pushReplacementNamed(context, '/'))
+        ],
+      ),
+    );
+  }
+
+  Widget drawerOptions(String title, Icon icon, Function function) {
+    return ListTile(
+      leading: new IconButton(
+          icon: icon, color: Colors.black, onPressed: () => null),
+      title: Text(title),
+      onTap: function,
+    );
+  }
+
 }

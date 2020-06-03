@@ -4,11 +4,11 @@ import 'category.dart';
 import 'product.dart';
 
 class AppData {
-  static String shoe_tilt_2 = 'assets/images/shoe_tilt_2.png';
-  static String shoe_tilt_1 = 'assets/images/shoe_tilt_1.png';
-  static String small_tilt_shoe_1 = 'assets/images/botella.png';
-  static String small_tilt_shoe_2 = 'assets/images/botellaM.png';
-  static String small_tilt_shoe_3 = 'assets/images/botellon.png';
+  //static String shoe_tilt_2 = 'assets/images/shoe_tilt_2.png';
+ // static String shoe_tilt_1 = 'assets/images/shoe_tilt_1.png';
+  // static String small_tilt_shoe_1 = 'assets/images/botella.png';
+  // static String small_tilt_shoe_2 = 'assets/images/botellaM.png';
+  // static String small_tilt_shoe_3 = 'assets/images/botellon.png';
 
   static List<Product> productList = new List<Product>() ;
 
@@ -16,6 +16,8 @@ class AppData {
      Product.getAllTheProduct();
      productList = Product.listOfAllProduct != null ? Product.listOfAllProduct : new List<Product>();
     }
+
+    static int indexPage = 0;
 
   // Lista que muestra el menu.
 

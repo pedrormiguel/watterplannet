@@ -193,7 +193,10 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return 
+    
+    Scaffold(
+      //appBar: AppBar(),
         body: Container(
       padding: AppTheme.padding,
       child: SingleChildScrollView(
@@ -215,30 +218,49 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
   }
 
   void completedBuy() {
-    if (AppData.cartList.itemSelect.length <= 0) {
+    if (AppData.cartList.itemSelect.length <= 0) 
+    {
       FlusBar().getBar(
           context: context, message: 'Agrega algun producto al carrito.');
-    } else {
-      List<OrderDetailProduct> p = new List<OrderDetailProduct>();
 
-      AppData.cartList.itemSelect.forEach((element) {
-        p.add(new OrderDetailProduct(
-            productID: element.product.productID,
-            amountOfUnits: element.cuantity,
-            unitPrice: element.product.price));
+    } 
+    else if(AppData.cartList.itemSelect != null)
+    {
+      List<OrderDetailProduct> orderDetailProducts = new List<OrderDetailProduct>();
+
+      AppData.cartList.itemSelect.forEach((element) 
+      {
+        orderDetailProducts.add
+        (
+
+              new OrderDetailProduct
+              (   
+                  productID: element.product.productID,
+                  nameProduct: element.product.name,
+                  amountOfUnits: element.cuantity,
+                  unitPrice: element.product.price
+              )
+        );
+
       });
 
-      // TODO Dirreccion;
-      new Order(
-          userID: Authentication.uid,
-          orderShipToAddres: "PRADO",
-          orderDetailProduct: p);
+      // TODO Dirreccion buscar direccion de cliente.
 
-      setState(() {
+      new Order
+          (
+            userID: Authentication.uid,
+            orderShipToAddres: "PRADO",
+            orderDetailProduct: orderDetailProducts
+          );
+
+      setState(() 
+      {
         AppData.cartList.itemSelect.clear();
+
       });
 
       FlusBar().getBar(context: context, message: 'Orden Completada.');
+
     }
   }
 }

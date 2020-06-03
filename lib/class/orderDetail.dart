@@ -5,17 +5,19 @@ import 'package:watterplannet/class/orderDetailProduct.dart';
 
 class OrderDetail {
   String orderDetailID;
-  final String orderIDOrderDetailId;
+  String orderIDOrderDetailId;
 
   List<OrderDetailProduct> orderDetailProduct;
 
-  final DatabaseReference orderDetailRef = FirebaseData.database
+   static DatabaseReference orderDetailRef = FirebaseData.database
       .reference()
       .child(NameDocumentsTable.tableDocumentOrderDetail);
 
   OrderDetail({this.orderIDOrderDetailId,this.orderDetailProduct}) {
     handleSubmit();
   }
+
+  OrderDetail.home();
 
   Future<void> handleSubmit() async =>
     await orderDetailRef.push().set(toJson());
@@ -29,13 +31,15 @@ class OrderDetail {
   }
 
   toJsonProductOrder() {
+
     var p = List<Map<String, Map<String, dynamic>>>();
 
       orderDetailProduct.forEach((element) {
         p.add({
           element.productID: {
-            "amountOfUnits": element.amountOfUnits,
-            "unitPrice": element.unitPrice
+            "nameProduct"     : element.nameProduct,
+            "amountOfUnits"   : element.amountOfUnits,
+            "unitPrice"       : element.unitPrice
           }
         });
       });

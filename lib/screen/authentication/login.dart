@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:watterplannet/class/Enums/nameDocumentsTable.dart';
 import 'package:watterplannet/class/FirebaseDatabase.dart';
 import 'package:watterplannet/class/supplies.dart';
 import 'package:watterplannet/class/user.dart';
@@ -1385,7 +1386,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
     DataSnapshot p = await FirebaseData.database
         .reference()
-        .child("supplies")
+        .child(NameDocumentsTable.tableDocumentSupplies)
         .orderByChild("email")
         .equalTo(email)
         .limitToFirst(1)
@@ -1416,7 +1417,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
     {
         p = await FirebaseData.database
         .reference()
-        .child("USER")
+        .child(NameDocumentsTable.tableDocumentUser)
         .orderByChild("email")
         .equalTo(email)
         .limitToFirst(1)
@@ -1449,9 +1450,10 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   }
 
   void signIn() {
-    if (this._signUpKey.currentState.validate()) {
+    if (this._signUpKey.currentState.validate()) 
+    {
       this._signUpKey.currentState.save();
-      this._signUpKey.currentState.reset();
+      
 
       var output = newUser = User(
           email: this._email.trim(),
@@ -1463,6 +1465,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
       var outputFromEmailAccount =  _auth.registerUser(_email, _password);
 
+      this._signUpKey.currentState.reset();
       print(output);
       print(outputFromEmailAccount);
     } else {

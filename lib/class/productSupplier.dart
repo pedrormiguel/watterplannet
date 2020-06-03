@@ -11,7 +11,7 @@ class ProductSupplier {
 
   // TODO integrar con la cuenta principal Product.
 
-  ProductSupplier({this.productSupplierID,this.productID, this.suppliesID}){
+  ProductSupplier( {this.productSupplierID,this.productID, this.suppliesID} ){
      handleSubmit();
   }
 

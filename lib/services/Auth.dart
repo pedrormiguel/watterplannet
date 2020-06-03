@@ -36,7 +36,7 @@ class Authentication {
 
   registerUser(String email, String password) async{
     try {
-           result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
+          result = await  _auth.createUserWithEmailAndPassword(email: email.trim(), password: password.trim());
           FirebaseUser user = result.user;
           user.sendEmailVerification();
           return user;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:watterplannet/class/data.dart';
 import 'package:watterplannet/screen/BottomNavigationBar/bottom_curved_Painter.dart';
 import 'package:watterplannet/screen/homeUser/main_page.dart';
 import 'package:watterplannet/theme/light_color.dart';
@@ -15,7 +16,8 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
     with TickerProviderStateMixin {
-      int selectedIndex = 0;
+  
+    int selectedIndex ;
 
 
 
@@ -32,6 +34,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
     Listenable.merge([_xController, _yController]).addListener(() {
       setState(() {});
     });
+
+      this.selectedIndex = AppData.indexPage;
 
     super.initState();
   }
@@ -131,6 +135,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
     setState(() {
       MainPage.selectWidget = index; 
       selectedIndex = index;
+      AppData.indexPage = index;
     });
 
     _yController.value = 1.0;

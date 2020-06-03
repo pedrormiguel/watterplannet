@@ -41,14 +41,14 @@ class User  {
          phoneNumber  = snapshot.value["phoneNumber"],
          address      = snapshot.value["address"];
 
-  toJson(){
-    return {
+  toJson()
+  {
+    return 
+    {
         "name"         : name,
         "lastName"     : lastName,
-        //"userName"     : userName,
         "password"     : password,
         "email"        : email,
-       // "isSuperAdmin" : isSuperAdmin,
         "phoneNumber"  : phoneNumber,
         "address"      : address
     };
