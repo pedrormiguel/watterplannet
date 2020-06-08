@@ -26,6 +26,7 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
             //style: TextStyle(fontSize: 50),
             style: TextStyle(fontWeight: FontWeight.bold),
             maxLines: 1,
+            
           ),
         ),
         body: SingleChildScrollView(
@@ -442,7 +443,7 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
           description: description.trim(),
           image: 'assets/images/mountains.jpeg',
           price: price,
-          suppliesID: MainPageBussines.perfil.uid,
+          supplierID: MainPageBussines.user.getIdFromFireBase(),
           unitInStock: unitInStock);
 
       _formkey.currentState.reset();

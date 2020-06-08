@@ -1,7 +1,6 @@
-class StatusOfOrders{
-  static const orderStatus =  {
-    1 : "Pendiente",
-    2 : "Enviado",
-    3 : "Terminado"
-  };
+class StatusOfOrders
+{  
+   static const String statusOfOrderPendiente = "Pendiente";
+   static const String statusOfOrderEnviado   = "Enviado";
+   static const String statusOfOrderTerminado = "Terminado"; 
 }

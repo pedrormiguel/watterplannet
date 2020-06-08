@@ -179,7 +179,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
             height: height,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
+              children: <Widget>
+              [
                 _icon(Icons.home, selectedIndex == 0, 0),
                 _icon(Icons.card_travel, selectedIndex == 1, 1),
                 _icon(Icons.search, selectedIndex == 2, 2),

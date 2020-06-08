@@ -64,7 +64,7 @@ class _MyHomePageState extends State<HomePage> {
     );
   }
 
-  Widget gridSystem() {
+  Widget gridSystem(List<Product> listOfAllProduct) {
     return GridView(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 1,
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<HomePage> {
             crossAxisSpacing: 20),
         padding: EdgeInsets.only(left: 20),
         scrollDirection: Axis.horizontal,
-        children: Product.listOfAllProduct
+        children: listOfAllProduct
             .map((product) => ProductCard(
                   product: product,
                 ))
@@ -84,7 +84,11 @@ class _MyHomePageState extends State<HomePage> {
     return Container(
         padding: const EdgeInsets.all(10.0),
         child: StreamBuilder(
-            stream: Product.productRef.onValue,
+
+            stream: Product.
+                    productRef
+                    .onValue,
+
             builder: (context, AsyncSnapshot snapshot) {
               var grade = snapshot.connectionState.toString();
 
@@ -107,10 +111,12 @@ class _MyHomePageState extends State<HomePage> {
                           ? snapshot.data.snapshot.value
                           : Map<dynamic, dynamic>();
 
-                  Product.listOfAllProduct = List<Product>();
+                  var listOfAllProduct = List<Product>();
 
                   values.forEach((key, value) {
-                    Product.listOfAllProduct.add(Product.fromMap(
+
+                    if(value["unitInStock"] > 0)
+                    listOfAllProduct.add(Product.fromMap(
                         productID: key,
                         image: value["image"],
                         price: double.parse(value["price"].toString()),
@@ -118,12 +124,12 @@ class _MyHomePageState extends State<HomePage> {
                         name: value["name"],
                         description: value["description"],
                         category: value["category"],
-                        suppliesID: value["suppliesID"],
+                        supplierID: value["supplierID"],
                         isLiked: value["isliked"],
                         unitInStock: value["unitInStock"]));
                   });
 
-                  return gridSystem();
+                  return gridSystem(listOfAllProduct);
                   break;
 
                 default:

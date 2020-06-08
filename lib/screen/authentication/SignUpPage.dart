@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:watterplannet/class/user.dart';
+import 'package:watterplannet/class/usuarios/consumer.dart';
 
 class SingUpPage {
    
@@ -13,7 +13,7 @@ class SingUpPage {
 
    int _phoneNumber;
 
-   User newUser;
+   Consumer newUser;
 
     var customBackgroundPicture = BoxDecoration(
       color: Colors.white,
@@ -53,7 +53,7 @@ class SingUpPage {
       form.save();
       form.reset();
 
-      newUser = User(
+      newUser = Consumer(
         email:       this._email,
         password:    this._password,
         name:        this._name,

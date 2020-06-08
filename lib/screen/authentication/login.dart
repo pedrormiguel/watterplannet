@@ -3,20 +3,25 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:watterplannet/class/Enums/nameDocumentsTable.dart';
 import 'package:watterplannet/class/FirebaseDatabase.dart';
-import 'package:watterplannet/class/supplies.dart';
-import 'package:watterplannet/class/user.dart';
+
+import 'package:watterplannet/class/usuarios/supplier.dart';
+import 'package:watterplannet/class/usuarios/consumer.dart';
+
 import 'package:flutter/services.dart';
+import 'package:watterplannet/class/usuarios/user.dart';
 import 'package:watterplannet/services/Auth.dart';
 import 'package:watterplannet/utils/FlushBart.dart';
 import 'package:watterplannet/utils/validators.dart';
 
 class Login extends StatefulWidget {
+
   @override
   _LoginScreenState createState() => new _LoginScreenState();
 }
 
 class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
-  final GlobalKey<FormState> _loginKey = GlobalKey<FormState>();
+
+  final GlobalKey<FormState> _loginKey = GlobalKey<FormState>(); 
   final GlobalKey<FormState> _signUpKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUpAsSupplierKey = GlobalKey<FormState>();
 
@@ -24,7 +29,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
 
   String _email, _password, _address, _name, _lastName;
-  String correo = "pedrormiguel@outlook.es";
+  String correo = "claro@o.com";
 
   String _companyName,
       _contactPhone,
@@ -34,20 +39,18 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
       _citySupplier;
 
   int _phoneNumber;
-  Supplies userBussines;
-  static User newUser;
-  bool isAUser;
 
-  var customBackgroundPicture = BoxDecoration(
+  BoxDecoration customBackgroundPicture = BoxDecoration(
       color: Colors.white,
       image: DecorationImage(
         colorFilter: new ColorFilter.mode(
             Colors.black.withOpacity(0.05), BlendMode.dstATop),
-        image: AssetImage('assets/backgroundLogin.jpg'),
+        image: AssetImage('assets/backgroundLogin.jpg'), //TODO AGREGAR VARIABLE DE FONDO NO TEXTO
         fit: BoxFit.cover,
       ));
 
-  Widget headerofPage(String title, String path) {
+  Widget headerofPage(String title, String path) 
+  {
     return Container(
       height: 140,
       padding: EdgeInsets.only(top: 25.0, bottom: 20),
@@ -73,7 +76,8 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
   Authentication _auth = Authentication();
 
   @override
-  void initState() {
+  void initState() 
+  {
     super.initState();
   }
 
@@ -400,7 +404,8 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         color: Colors.redAccent,
-                        onPressed: () async {
+                        onPressed: () async 
+                        {
                           await logIn();
                         },
                         child: Container(
@@ -1350,39 +1355,42 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
     );
   }
 
-  Future<void> logIn() async {
+  Future<void> logIn() async
+  {
     var output;
 
-    if (_loginKey.currentState.validate()) {
+    if (_loginKey.currentState.validate()) 
+    {
       _loginKey.currentState.save();
 
       output =
           await _auth.loginWithEmailAndPassword(_loginEmail, _loginPassword);
+      
 
-      if (output.runtimeType != String && output != null) {
+      if (output.runtimeType != String && output != null) 
+      {
 
-        userBussines = await getUser(output.email);
+       User userlogged = await getUser(output.email);
+      
 
-        switch (isAUser) {
-          case false:
-            print(userBussines.companyName);
-            Navigator.pushReplacementNamed(context, "mainPageBussines", arguments: output);
-            break;
-          case true:
-            Navigator.pushReplacementNamed(context, "mainPage", arguments: output);
-            break;
-          default:
-        }
+       Navigator.pushReplacementNamed(context, userlogged.loggin() , arguments: userlogged);
 
         _loginKey.currentState.reset();
-      } else {
+
+      } 
+      else 
+      {
         flusBar.getBar(
             context: context, title: 'Notificacion', message: output);
       }
     }
   }
 
-  Future<Supplies> getUser(String email) async {
+  Future<dynamic> getUser(String email) async 
+  {
+
+    //TODO CREAR LISTADO DE CORREOS PARA IDENTIFCAR ROLES
+     var user;
 
     DataSnapshot p = await FirebaseData.database
         .reference()
@@ -1392,70 +1400,72 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
         .limitToFirst(1)
         .once();
 
-    if (p.value != null) {
+    if (p.value != null) 
+    {
 
-      Map<dynamic, dynamic> values = p.value;
-      Supplies user;
+          Map<dynamic, dynamic> values = p.value;
 
-      values.forEach((key, value) {
-        user = Supplies.fromMap(
-            suppliesID: key,
+
+      values.forEach((key, value) 
+      {
+        user = Supplier.fromMap(
+            supplierID: key,
             companyName: value["companyName"],
             address: value["address"],
             city: value["city"],
-            contactPhone: value["contactPhone"],
+            phoneNumber: value["contactPhone"],
             email: value["email"],
             keyAccountUID: value["keyAccountUID"],
             password: value["password"]);
       });
 
-      isAUser = false;
 
       return user;
     }
     else
     {
-        p = await FirebaseData.database
+
+
+        DataSnapshot userData = await FirebaseData.database
         .reference()
-        .child(NameDocumentsTable.tableDocumentUser)
+        .child(NameDocumentsTable.tableDocumentConsumer)
         .orderByChild("email")
         .equalTo(email)
         .limitToFirst(1)
         .once();
 
-        Map<dynamic, dynamic> values = p.value;
+         Map<dynamic, dynamic> valuesUserData = userData.value;
 
-        values.forEach((key, value) {
+    
+        valuesUserData.forEach((key, value) { 
 
-          newUser = User.fromMap(
+          user = Consumer.fromLogin(key, value);
 
-          userID:       key,
-          address:      value["address"],
-          email:        value["email"],
-          lastName:     value["lastName"],
-          name:         value["name"],
-          password:     value["password"],
-          phoneNumber:  value["phoneNumber"]
-          
-          );
-
-         });
+        });
 
         
-
-        isAUser = true;
+        
+        return user;
     }
 
 
   }
 
-  void signIn() {
+  void signIn() 
+    async {
+      var outputFromEmailAccount;
+
     if (this._signUpKey.currentState.validate()) 
     {
       this._signUpKey.currentState.save();
-      
 
-      var output = newUser = User(
+
+
+      outputFromEmailAccount =  await _auth.registerUser(_email, _password);
+
+      if( outputFromEmailAccount != null && outputFromEmailAccount.runtimeType !=  String )
+      {
+          Consumer(
           email: this._email.trim(),
           password: this._password.trim(),
           name: this._name.trim(),
@@ -1463,13 +1473,18 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
           address: this._address.trim(),
           phoneNumber: this._phoneNumber.toString().trim());
 
-      var outputFromEmailAccount =  _auth.registerUser(_email, _password);
+          this._signUpKey.currentState.reset();
 
-      this._signUpKey.currentState.reset();
-      print(output);
-      print(outputFromEmailAccount);
-    } else {
-      print(this._signUpKey.currentState);
+          FlusBar().getBar(context: context, message: "Usuario Registrado.");
+      }
+      else 
+      {
+         FlusBar().getBar(context: context, message: outputFromEmailAccount);
+      }
+
+    } else 
+    {
+       FlusBar().getBar(context: context, message: "Favor validar informacion.");
     }
 
   }
@@ -1485,10 +1500,10 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
       if (outputFromEmailAccount.runtimeType != String &&
           outputFromEmailAccount != null) {
-        Supplies(
+        Supplier(
             keyAccountUID: outputFromEmailAccount.uid,
             companyName: _companyName.trim(),
-            contactPhone: _contactPhone.trim(),
+            phoneNumber: _contactPhone.trim(),
             email: _emailSupplier.trim(),
             password: _passwordSupplier.trim(),
             address: _addressSuplier.trim(),
@@ -1538,7 +1553,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
         ));
   }
 
-  gotoLogin([int page = 0]) {
+  void gotoLogin([int page = 0]) {
     //controller_0To1.forward(from: 0.0);
     _controller.animateToPage(
       page,
@@ -1547,7 +1562,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
     );
   }
 
-  gotoSignup() {
+  void gotoSignup() {
     //controller_minus1To0.reverse(from: 0.0);
     _controller.animateToPage(
       2,
@@ -1556,8 +1571,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
     );
   }
 
-  Widget customTextField(
-      var fieldC, String hintext, String header, bool isObscureText,int minimunLength,
+  Widget customTextField( var fieldC, String hintext, String header, bool isObscureText,int minimunLength,
       [TextInputType typeofInput = TextInputType.text]) {
     return Column(
       children: <Widget>[

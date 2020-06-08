@@ -5,13 +5,13 @@ import 'package:watterplannet/class/FirebaseDatabase.dart';
 class ProductSupplier {
   final String productSupplierID;
   final String productID;
-  final String suppliesID;
+  final String supplierID;
   final DatabaseReference productSupplierRef = FirebaseData.database.reference () .child(NameDocumentsTable.tableDocumentProductSupplier);
   // final String nota; 
 
   // TODO integrar con la cuenta principal Product.
 
-  ProductSupplier( {this.productSupplierID,this.productID, this.suppliesID} ){
+  ProductSupplier( {this.productSupplierID,this.productID, this.supplierID} ){
      handleSubmit();
   }
 
@@ -23,14 +23,14 @@ class ProductSupplier {
   ProductSupplier.fromSnapshot( DataSnapshot snapshot)
        : productSupplierID       = snapshot.key,
          productID      = snapshot.value["productID"],
-         suppliesID     = snapshot.value["suppliesID"];
+         supplierID     = snapshot.value["supplierID"];
 
 
   toJson() {
     return {
         "productSupplierID" : productSupplierID,
         "productID"         : productID,
-        "suppliesID"        : suppliesID
+        "supplierID"        : supplierID
     };
   }
 

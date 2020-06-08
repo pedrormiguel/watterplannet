@@ -2,8 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:watterplannet/class/data.dart';
-import 'package:watterplannet/class/order.dart';
-import 'package:watterplannet/class/orderDetailProduct.dart';
+import 'package:watterplannet/class/ordenes/order.dart';
 import 'package:watterplannet/class/product.dart';
 import 'package:watterplannet/screen/homeUser/title_text.dart';
 import 'package:watterplannet/services/Auth.dart';
@@ -196,7 +195,6 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
     return 
     
     Scaffold(
-      //appBar: AppBar(),
         body: Container(
       padding: AppTheme.padding,
       child: SingleChildScrollView(
@@ -217,47 +215,25 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
     ));
   }
 
-  void completedBuy() {
+  Future<void> completedBuy() async {
+    
     if (AppData.cartList.itemSelect.length <= 0) 
     {
       FlusBar().getBar(
           context: context, message: 'Agrega algun producto al carrito.');
-
     } 
     else if(AppData.cartList.itemSelect != null)
     {
-      List<OrderDetailProduct> orderDetailProducts = new List<OrderDetailProduct>();
-
-      AppData.cartList.itemSelect.forEach((element) 
-      {
-        orderDetailProducts.add
-        (
-
-              new OrderDetailProduct
-              (   
-                  productID: element.product.productID,
-                  nameProduct: element.product.name,
-                  amountOfUnits: element.cuantity,
-                  unitPrice: element.product.price
-              )
-        );
-
-      });
-
+      
       // TODO Dirreccion buscar direccion de cliente.
 
       new Order
           (
-            userID: Authentication.uid,
-            orderShipToAddres: "PRADO",
-            orderDetailProduct: orderDetailProducts
+            consumerID: Authentication.result.user.uid,
+            orderShipToAddres: "PRADO"
           );
 
-      setState(() 
-      {
-        AppData.cartList.itemSelect.clear();
-
-      });
+      setState( () => AppData.cartList.itemSelect.clear()  );
 
       FlusBar().getBar(context: context, message: 'Orden Completada.');
 

@@ -2,80 +2,87 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:watterplannet/class/perfil.dart';
 import 'package:watterplannet/class/product.dart';
+import 'package:watterplannet/class/usuarios/user.dart';
+import 'package:watterplannet/utils/drawerMenu.dart';
+import 'package:watterplannet/utils/drawerOptions.dart';
+
 
 class MainPageBussines extends StatefulWidget {
   MainPageBussines({Key key}) : super(key: key);
+  
   static FirebaseUser perfil;
+  static User user;
+  
 
   @override
   _MainPageBussinesState createState() => _MainPageBussinesState();
 }
 
 class _MainPageBussinesState extends State<MainPageBussines> {
+
+  DraweMenu draweMenu;
+  
   @override
-  void initState() {
+  void initState() 
+  {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    MainPageBussines.perfil = ModalRoute.of(context).settings.arguments;
+
+       MainPageBussines.user = ModalRoute.of(context).settings.arguments;
+
+      draweMenu  = new DraweMenu 
+                    (
+                      user: MainPageBussines.user,
+                      drawerOptions: getOptionsMenu()
+                    );
 
     return Scaffold(
       appBar: AppBar(),
-      body: listProduct(),
-      drawer: drawerSupplier(),
+      body: listProduct(MainPageBussines.user.getIdFromFireBase()),
+      drawer: draweMenu,
     );
+
   }
 
-  Widget drawerSupplier() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountEmail: Text(MainPageBussines.perfil.uid),
-            accountName: Text(MainPageBussines.perfil.email),
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-          ),
-          drawerOptions('Agregar Producto', Icon(Icons.filter_none),
-              () => Navigator.pushNamed(context, 'formCreateProduct')),
-          drawerOptions('Cerrar sesion', Icon(Icons.exit_to_app),
-              () => Navigator.pushReplacementNamed(context, '/'))
-        ],
-      ),
-    );
-  }
+  List<DrawerOptions> getOptionsMenu() {
+        return 
+        [
+          DrawerOptions
+         ( 
+            title:"Agregar Producto",
+            icon:Icon(Icons.library_add),
+           function: () => Navigator.popAndPushNamed(context, 'formCreateProduct'), 
+         ),
+          DrawerOptions
+         ( 
+            title:"Cerrar sesion",
+            icon:Icon(Icons.exit_to_app),
+           function: () => Navigator.pushReplacementNamed(context, '/'), 
+         ),
 
-  Widget bussinesAccount(AsyncSnapshot<Event> snapshot) {
-    Map<dynamic, dynamic> values = snapshot.data.snapshot.value;
-    String companyName;
-
-    values.forEach((key, value) {
-      companyName = value["companyName"];
-    });
-
-    return Scaffold(
-      appBar: AppBar(),
-      body: listProduct(),
-      drawer: drawerSupplier(),
-    );
-  }
-
-  Widget listProduct() {
+        ];
+  } 
+  
+  Widget listProduct(String id) 
+  {
     return StreamBuilder(
+
         stream: Product.productRef
-            .orderByChild("suppliesID")
-            .equalTo(MainPageBussines.perfil.uid)
-            .onValue,
-        builder: (context, AsyncSnapshot<Event> snapshot) {
+                .orderByChild("supplierID")
+                .equalTo(id)
+                .onValue,
+
+        builder: (context, AsyncSnapshot<Event> snapshot) 
+        {
+
           var grade = snapshot.connectionState.toString();
 
-          switch (grade) {
+          switch (grade) 
+          {
             case "ConnectionState.active":
               {
                 Map<dynamic, dynamic> values =
@@ -83,26 +90,48 @@ class _MainPageBussinesState extends State<MainPageBussines> {
                         ? snapshot.data.snapshot.value
                         : Map<dynamic, dynamic>();
 
-                Perfil.listSuppliesProduct = List<Product>();
+                var listSuppliesProduct = List<Product>();
 
-                values.forEach((key, value) {
-                  Perfil.listSuppliesProduct.add(Product.fromMap(
-                      productID: key,
-                      image: value["image"],
-                      price: double.parse(value["price"].toString()),
-                      isSelected: value["isSelected"],
-                      name: value["name"],
-                      description: value["description"],
-                      category: value["category"],
-                      suppliesID: value["suppliesID"],
-                      isLiked: value["isliked"],
-                      unitInStock: value["unitInStock"]));
-                });
+                 values.forEach( (key, value) 
+                 {
 
-                return values.length > 0
-                    ? Center(
+                    listSuppliesProduct.add
+                    (
+                      Product.fromMap(
+                                    productID: key,
+                                    image: value["image"],
+                                    price: double.parse(value["price"].toString()),
+                                    isSelected: value["isSelected"],
+                                    name: value["name"],
+                                    description: value["description"],
+                                    category: value["category"],
+                                    supplierID: value["supplierID"],
+                                    isLiked: value["isliked"],
+                                    unitInStock: value["unitInStock"])
+                    );
+                 });                  
+        
+                return listSuppliesProduct.length > 0 ? productListSupplier(listSuppliesProduct)  : withOutProduct();
+              }
+              break;
+
+            case "ConnectionState.waiting":
+            default:
+              return Center(
+                  child: SizedBox(
+                child: CircularProgressIndicator(),
+                width: 60,
+                height: 60,
+              ));
+              break;
+          }
+        });
+  }
+
+  Widget productListSupplier( List<Product> listSuppliesProduct) {
+    return  Center(
                         child: ListView.builder(
-                            itemCount: Perfil.listSuppliesProduct.length,
+                            itemCount: listSuppliesProduct.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Container(
                                 width: 200,
@@ -120,17 +149,17 @@ class _MainPageBussinesState extends State<MainPageBussines> {
                                         //     EdgeInsets.only(top:10, left: 15),
                                         leading: ClipOval(
                                           child: Image.asset(
-                                            Perfil.listSuppliesProduct[index]
+                                            listSuppliesProduct[index]
                                                 .image,
                                           ),
                                         ),
                                         title: Text(
-                                            Perfil.listSuppliesProduct[index]
+                                            listSuppliesProduct[index]
                                                 .name,
                                             style:
                                                 TextStyle(color: Colors.white)),
                                         subtitle: Text(
-                                            Perfil.listSuppliesProduct[index]
+                                            listSuppliesProduct[index]
                                                 .category,
                                             style:
                                                 TextStyle(color: Colors.white)),
@@ -144,8 +173,7 @@ class _MainPageBussinesState extends State<MainPageBussines> {
                                             onPressed: () {
                                               Navigator.pushNamed(
                                                   context, 'formUpdateProduct',
-                                                  arguments: Perfil
-                                                      .listSuppliesProduct
+                                                  arguments: listSuppliesProduct
                                                       .elementAt(index));
                                             },
                                           ),
@@ -154,10 +182,11 @@ class _MainPageBussinesState extends State<MainPageBussines> {
                                                 style: TextStyle(
                                                     color: Colors.white)),
                                             onPressed: () async {
-                                              var id = Perfil
-                                                  .listSuppliesProduct
+                                              var id = listSuppliesProduct
                                                   .elementAt(index)
                                                   .productID;
+
+                                                 // listSuppliesProduct.elementAt(index).
 
                                               await Product.eliminarProduct(id);
                                             },
@@ -165,7 +194,7 @@ class _MainPageBussinesState extends State<MainPageBussines> {
                                           FlatButton(
                                             child: Text(
                                                 'Stock ' +
-                                                    Perfil.listSuppliesProduct
+                                                    listSuppliesProduct
                                                         .elementAt(index)
                                                         .unitInStock
                                                         .toString(),
@@ -180,39 +209,24 @@ class _MainPageBussinesState extends State<MainPageBussines> {
                                 ),
                               );
                             }),
-                      )
-                    : Center(
-                        child: AutoSizeText(
-                        "No tiene productos agregados",
-                        maxFontSize: 150,
-                        textAlign: TextAlign.center,
-                        minFontSize: 25,
-                        maxLines: 1,
-                        style:
-                            TextStyle(height: 2, fontWeight: FontWeight.bold),
-                      ));
-              }
-              break;
-
-            case "ConnectionState.waiting":
-            default:
-              return Center(
-                  child: SizedBox(
-                child: CircularProgressIndicator(),
-                width: 60,
-                height: 60,
-              ));
-              break;
-          }
-        });
+                      );
   }
 
-  Widget drawerOptions(String title, Icon icon, Function function) {
-    return ListTile(
-      leading: new IconButton(
-          icon: icon, color: Colors.black, onPressed: () => null),
-      title: Text(title),
-      onTap: function,
+  Widget withOutProduct() 
+  {
+
+    return Center
+    (
+            child: AutoSizeText
+            (
+              "No tiene productos agregados",
+              maxFontSize: 150,
+              textAlign: TextAlign.center,
+              minFontSize: 25,
+              maxLines: 1,
+              style:TextStyle(height: 2, fontWeight: FontWeight.bold),
+           )
     );
   }
+
 }

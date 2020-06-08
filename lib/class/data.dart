@@ -12,11 +12,6 @@ class AppData {
 
   static List<Product> productList = new List<Product>() ;
 
-    static void getProduct() {
-     Product.getAllTheProduct();
-     productList = Product.listOfAllProduct != null ? Product.listOfAllProduct : new List<Product>();
-    }
-
     static int indexPage = 0;
 
   // Lista que muestra el menu.

@@ -1,42 +1,50 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:watterplannet/class/data.dart';
 
-class Authentication {
+class Authentication  {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   static AuthResult result;
-  static String uid;
   String code;
 
-   void cargarDatos(){
-      AppData.getProduct();
-   }
+   
 
-  singAno() { 
-    _auth.signInAnonymously();
-  }
+  singOut() => _auth.signOut();
 
-  loginWithEmailAndPassword(String email, String password) async{
-     try {
+  loginWithEmailAndPassword(String email, String password) async 
+  {
+     try 
+     {
             result = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
+
             FirebaseUser user = result.user;
-            uid = user.uid;
-            cargarDatos();
+
+            // TODO Revisar como cargo los productos
             return user;
 
-     }catch (error){
+     }catch (error)
+     {
       messageError(error);
       return code;
      }
   }
 
-  logoutUser(){
+   Future<FirebaseUser> getCurrentUser() async {
+    FirebaseUser user = await _auth.currentUser();
+    return user;
+  }
+
+  logoutUser() {
     _auth.signOut();
   }
 
-  registerUser(String email, String password) async{
+  registerUser(String email, String password) async 
+  {
     try {
           result = await  _auth.createUserWithEmailAndPassword(email: email.trim(), password: password.trim());
+      
           FirebaseUser user = result.user;
           user.sendEmailVerification();
           return user;
@@ -84,5 +92,6 @@ class Authentication {
         break;
     }
   }
+
 
 }

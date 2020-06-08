@@ -2,27 +2,31 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:watterplannet/class/order.dart';
-import 'package:watterplannet/class/orderDetail.dart';
-import 'package:watterplannet/class/orderDetailProduct.dart';
+import 'package:watterplannet/class/ordenes/order.dart';
+import 'package:watterplannet/class/ordenes/orderDetail.dart';
+import 'package:watterplannet/class/ordenes/orderDetailProduct.dart';
 import 'package:watterplannet/services/Auth.dart';
 
 class OrderList extends StatefulWidget {
   @override
   _OrderListState createState() => _OrderListState();
+
+  // Order _order = new Order();
 }
 
-class _OrderListState extends State<OrderList> {
+class _OrderListState extends State<OrderList> 
+{
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) 
+  {
     return Container(
       constraints: BoxConstraints.expand(),
       margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * .10),
       child: StreamBuilder(
 
         stream: Order.orderRef
-            .orderByChild("userID")
-            .equalTo(Authentication.uid)
+            .orderByChild("consumerID")
+            .equalTo(Authentication.result.user.uid)
             .onValue,
 
         builder: (context, AsyncSnapshot<Event> snapshot) 
@@ -55,9 +59,10 @@ class _OrderListState extends State<OrderList> {
     );
   }
 
-  Widget wrapperWidget(Map<dynamic, dynamic> values) {
+  Widget wrapperWidget(Map<dynamic, dynamic> values) 
+  {
     return FutureBuilder<List<Order>>(
-        future: Order.getListOrderUser(values),
+        future: Order.getListOrderConsumer(values),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.length > 0) {
@@ -123,7 +128,7 @@ class _OrderListState extends State<OrderList> {
 
                               snapshot.data.forEach((element) 
                               {
-                                    element.orderDetailProduct.forEach((element) 
+                                    element.orderDetailProducts.forEach((element) 
                                     {
                                       toShow.add(orderDetailsProdutcs(element));
                                     });
@@ -137,7 +142,7 @@ class _OrderListState extends State<OrderList> {
                         return CircularProgressIndicator();
                       },
                     ),
-                    
+
                     ButtonBar(
                       children: <Widget>[
                         Text('${elements.elementAt(index).orderStatus}',
