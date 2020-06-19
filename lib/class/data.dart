@@ -25,12 +25,6 @@ class AppData {
     Category(id: 3, price: 20,name: "Grande", image: 'assets/images/size.png'),
   ];
 
-  static List<String> showThumbnailList = [
-    "assets/shoe_thumb_5.png",
-    "assets/shoe_thumb_1.png",
-    "assets/shoe_thumb_4.png",
-    "assets/shoe_thumb_3.png",
-  ];
 
   static String description =
       "";

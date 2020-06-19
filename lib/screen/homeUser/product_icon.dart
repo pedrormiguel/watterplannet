@@ -5,9 +5,7 @@ import 'package:watterplannet/theme/light_color.dart';
 import 'package:watterplannet/theme/theme.dart';
 
 class ProducIcon extends StatelessWidget {
-  // final String imagePath;
-  // final String text;
-  // final bool isSelected;
+ 
   final Category model;
   ProducIcon({Key key, this.model}) : super(key: key);
 

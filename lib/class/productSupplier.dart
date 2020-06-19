@@ -16,7 +16,6 @@ class ProductSupplier {
   }
 
   void handleSubmit() async {
-    print(toJson());
     await productSupplierRef.push().set(toJson());
   }
 

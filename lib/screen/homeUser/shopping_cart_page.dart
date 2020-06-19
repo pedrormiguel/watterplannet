@@ -64,7 +64,7 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             fit: BoxFit.contain,
-                            image: AssetImage(model.image))))
+                            image: NetworkImage(model.image))))
               ],
             ),
           ),
@@ -230,7 +230,7 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
       new Order
           (
             consumerID: Authentication.result.user.uid,
-            orderShipToAddres: "PRADO"
+            orderShipToAddres: "PRADO" //Todo Arreglar direccion
           );
 
       setState( () => AppData.cartList.itemSelect.clear()  );

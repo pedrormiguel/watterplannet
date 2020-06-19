@@ -380,11 +380,7 @@ class FormularioProductoActualizar extends StatelessWidget {
       );
 
       FlusBar().getBar(context: context,title: "Notificacion",message: "Producto Actualizado Correctamente.");
-      print('klk');
     }
-    else{
-      print('wron');
-  
-    }
+    
  }
  }

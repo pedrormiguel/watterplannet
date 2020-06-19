@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:watterplannet/class/data.dart';
-
 class Authentication  {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -17,11 +15,10 @@ class Authentication  {
   {
      try 
      {
-            result = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password.trim());
+            result = await _auth.signInWithEmailAndPassword(email: email.trim().toLowerCase(), password: password.trim());
 
             FirebaseUser user = result.user;
 
-            // TODO Revisar como cargo los productos
             return user;
 
      }catch (error)
@@ -40,8 +37,7 @@ class Authentication  {
     _auth.signOut();
   }
 
-  registerUser(String email, String password) async 
-  {
+  registerUser(String email, String password) async {
     try {
           result = await  _auth.createUserWithEmailAndPassword(email: email.trim(), password: password.trim());
       

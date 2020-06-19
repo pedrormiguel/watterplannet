@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watterplannet/screen/authentication/login.dart';
+import 'package:watterplannet/screen/camera.dart';
 import 'package:watterplannet/screen/homeBussines/formularioProductoActualizar.dart';
 import 'package:watterplannet/screen/homeBussines/formularioProductoCrear.dart';
 import 'package:watterplannet/screen/homeBussines/mainPageBussines.dart';
@@ -21,6 +22,8 @@ Map<String, WidgetBuilder> getApplicationRoute() {
 
       'mainPageBussines'     : (BuildContext context) => MainPageBussines(),
       'formCreateProduct'    : (BuildContext context) => FormularioProductoCrear(),
-      'formUpdateProduct'    : (BuildContext context) => FormularioProductoActualizar()
+      'formUpdateProduct'    : (BuildContext context) => FormularioProductoActualizar(),
+
+      'camera' :  (BuildContext context) => SelectePickerPhoto()
     };
 }

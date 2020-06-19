@@ -4,8 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:watterplannet/class/product.dart';
 import 'package:watterplannet/class/usuarios/user.dart';
-import 'package:watterplannet/utils/drawerMenu.dart';
-import 'package:watterplannet/utils/drawerOptions.dart';
+import 'package:watterplannet/utils/drawer/drawerMenu.dart';
+import 'package:watterplannet/utils/drawer/drawerOptions.dart';
 
 
 class MainPageBussines extends StatefulWidget {
@@ -147,8 +147,9 @@ class _MainPageBussinesState extends State<MainPageBussines> {
                                       ListTile(
                                         // contentPadding:
                                         //     EdgeInsets.only(top:10, left: 15),
-                                        leading: ClipOval(
-                                          child: Image.asset(
+                                        leading: ClipOval
+                                        (
+                                          child: Image.network(
                                             listSuppliesProduct[index]
                                                 .image,
                                           ),

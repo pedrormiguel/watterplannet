@@ -49,8 +49,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
         fit: BoxFit.cover,
       ));
 
-  Widget headerofPage(String title, String path) 
-  {
+  Widget headerofPage(String title, String path) {
     return Container(
       height: 140,
       padding: EdgeInsets.only(top: 25.0, bottom: 20),
@@ -1355,8 +1354,8 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
     );
   }
 
-  Future<void> logIn() async
-  {
+  Future<void> logIn() async {
+    
     var output;
 
     if (_loginKey.currentState.validate()) 
@@ -1375,7 +1374,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
        Navigator.pushReplacementNamed(context, userlogged.loggin() , arguments: userlogged);
 
-        _loginKey.currentState.reset();
+       _loginKey.currentState.reset();
 
       } 
       else 
@@ -1386,8 +1385,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
     }
   }
 
-  Future<dynamic> getUser(String email) async 
-  {
+  Future<dynamic> getUser(String email) async {
 
     //TODO CREAR LISTADO DE CORREOS PARA IDENTIFCAR ROLES
      var user;
@@ -1451,8 +1449,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
   }
 
-  void signIn() 
-    async {
+  void signIn() async {
       var outputFromEmailAccount;
 
     if (this._signUpKey.currentState.validate()) 
@@ -1519,7 +1516,6 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
             context: context,
             title: "Notificacion",
             message: outputFromEmailAccount);
-        print(this._signUpAsSupplierKey.currentState);
         return;
       }
     }

@@ -7,8 +7,8 @@ import 'package:watterplannet/screen/homeUser/shopping_cart_page.dart';
 import 'package:watterplannet/screen/homeUser/title_text.dart';
 import 'package:watterplannet/theme/light_color.dart';
 import 'package:watterplannet/theme/theme.dart';
-import 'package:watterplannet/utils/drawerMenu.dart';
-import 'package:watterplannet/utils/drawerOptions.dart';
+import 'package:watterplannet/utils/drawer/drawerMenu.dart';
+import 'package:watterplannet/utils/drawer/drawerOptions.dart';
 
 class MainPage extends StatefulWidget {
 

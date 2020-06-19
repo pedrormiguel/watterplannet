@@ -49,7 +49,6 @@ class Product
       this.isLiked});
 
   void handleSubmit() async {
-    print(toJson());
     await productRef.push().set(toJson());
   }
 
@@ -109,6 +108,18 @@ class Product
      productRef.child(this.productID).update(toModify);
    }
 
-  // Future<void>  
+   Future<void> updateIsLiked() async {
+
+     this.isLiked =  !this.isLiked;
+
+     var toModify = {
+
+       "isliked" : this.isLiked
+
+     };
+
+     productRef.child(this.productID).update(toModify);
+
+   }
 
 }

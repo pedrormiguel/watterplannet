@@ -62,10 +62,7 @@ class SingUpPage {
         phoneNumber: this._phoneNumber.toString()
       );
 
-    }else {
-      print(form.context.widget.key);
     }
-
           // if(_signUpKey.currentState.validate()){
           //   _signUpKey.currentState.save();
 

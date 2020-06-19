@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:watterplannet/class/product.dart';
+import 'package:watterplannet/interfaces/IServicesFirebaseImage.dart';
 import 'package:watterplannet/screen/homeBussines/mainPageBussines.dart';
 import 'package:watterplannet/utils/FlushBart.dart';
 import 'package:watterplannet/utils/validators.dart';
@@ -15,6 +18,12 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
   String name = "", category, description;
   double price;
   int unitInStock;
+  String titleTextImage = "Picture no selected";
+  File _image;
+  String ulrImage;
+  
+  ServicesFirebaseImage _servicesFirebaseImage = new ServicesFirebaseImage();
+
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   @override
@@ -31,25 +40,24 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
         ),
         body: SingleChildScrollView(
                   child: Container(
-              height: MediaQuery.of(context).size.height * 0.90,
+              height: MediaQuery.of(context).size.height,
          
               child: Center(
                 child: Form(
                   key: _formkey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                    children: <Widget>[
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
+                    children: <Widget>
+                    [
+                   
                         Row(
                           children: <Widget>[
                             new Expanded(
                               child: new Padding(
                                 padding: const EdgeInsets.only(left: 40.0),
-                                child: new Text(
+
+                                child: new Text
+                                (
                                   'titulo'.toUpperCase(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -60,10 +68,10 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
                               ),
                             ),
                           ],
-                        ), //Cabezera
+                        ),
                         Container(
                           margin: const EdgeInsets.only(
-                              left: 40.0, right: 40.0, top: 2),
+                              left: 40.0, right: 40.0),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             border: Border(
@@ -95,9 +103,7 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
                         Divider(
                           height: 10.0,
                         ),
-                      ]),
-
-                      Column(children: <Widget>[
+                     
                         Row(
                           children: <Widget>[
                             new Expanded(
@@ -150,8 +156,8 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
                         Divider(
                           height: 10.0,
                         ),
-                      ]),
-                      Column(children: <Widget>[
+                      
+                      
                         Row(
                           children: <Widget>[
                             new Expanded(
@@ -204,8 +210,47 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
                         Divider(
                           height: 10.0,
                         ),
-                      ]),
-                      Column(children: <Widget>[
+                    
+                        Row (
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>
+                          [
+                            new Expanded
+                            (
+                              child: new Padding
+                              (
+                                padding: const EdgeInsets.only(left: 40.0),
+                                child: new Text (
+                                 'Photo'.toUpperCase(),
+                                  style: TextStyle (
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.redAccent,
+                                    fontSize: 15.0,
+                                  ),
+                                ),
+                              )
+                            ),
+                          ],
+                        ),
+
+                         ButtonBar
+                         ( 
+                           alignment: MainAxisAlignment.spaceEvenly,
+                           children: <Widget>
+                            [
+                              Padding(
+                                padding: const EdgeInsets.only(left:20.0),
+                                child: AutoSizeText(titleTextImage, textAlign: TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold),),
+                              ),
+                              RaisedButton(onPressed: getImageFromCamera, child: Icon(Icons.camera_alt),),
+                              FloatingActionButton(onPressed: getImageFromGallery, mini: true, child: Icon(Icons.create_new_folder),),
+                            ],
+                         ),
+                         Divider(
+                          height: 10.0,
+                        ),
+
                         Row(
                           children: <Widget>[
                             new Expanded(
@@ -259,8 +304,7 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
                         Divider(
                           height: 10.0,
                         ),
-                      ]),
-                      Column(children: <Widget>[
+                     
                         Row(
                           children: <Widget>[
                             new Expanded(
@@ -278,7 +322,6 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
                             ),
                           ],
                         ), //Cabezera
-
                         Container(
                           width: MediaQuery.of(context).size.width,
                           margin: const EdgeInsets.only(
@@ -315,8 +358,8 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
                         Divider(
                           height: 10.0,
                         ),
-                      ]),
-                      Container(
+                      
+                        Container (
                         // Boton SIGN UP
                         width: MediaQuery.of(context).size.width,
                         margin: const EdgeInsets.only(
@@ -433,20 +476,24 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
     );
   }
 
-  agregarProducto() {
-    if (_formkey.currentState.validate()) {
+  agregarProducto() async {
+    if (_formkey.currentState.validate() && _image != null) {
       _formkey.currentState.save();
+
+      await uploadImage();
+      await getUrlImage();
 
       Product(
           name: name.trim(),
           category: category.trim(),
           description: description.trim(),
-          image: 'assets/images/mountains.jpeg',
+          image: ulrImage,
           price: price,
           supplierID: MainPageBussines.user.getIdFromFireBase(),
           unitInStock: unitInStock);
 
       _formkey.currentState.reset();
+      titleTextImage = "Picture no selected";
 
       FlusBar().getBar(
           context: context,
@@ -454,6 +501,30 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
           message: "Producto registado con exito.");
     }
   }
+
+  Future<void> getImageFromCamera() async {
+     _image = await _servicesFirebaseImage.getImageFromCamera();
+
+    setState(() {
+      titleTextImage = "Image Selected From Camera";
+    });
+  }
+
+  Future<void> getImageFromGallery() async {
+    _image = await _servicesFirebaseImage.getImageFromGallery();
+
+     setState(() {
+          titleTextImage = "Image Selected From Gallery";
+     });
+  
+  }
+
+  Future<void> uploadImage() async {
+
+     await  _servicesFirebaseImage.uploadPicture();
+  }
+
+  Future<String> getUrlImage () async =>  ulrImage = await _servicesFirebaseImage.getUrl();
 
   void asignValue(String campo, String value) {
     campo = value;

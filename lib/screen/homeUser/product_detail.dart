@@ -40,9 +40,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     super.dispose();
   }
 
-  bool isLiked = true;
 
-  Widget _appBar() {
+  Widget _appBar(bool isLiked ) {
     return Container(
       padding: AppTheme.padding,
       child: Row(
@@ -56,11 +55,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                 color: Colors.black54, size: 15, padding: 12, isOutLine: true),
           ),
           InkWell(
-            onTap: () {
-              setState(() {
-                widget.curretItem.isLiked = !widget.curretItem.isLiked;
-                //isLiked = !isLiked;
-              });
+            onTap: () async 
+            {
+                await widget.curretItem.updateIsLiked();
+                setState(() { widget; });
             },
             child: _icon(
                 widget.curretItem.isLiked
@@ -126,25 +124,14 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           fit: BoxFit.contain,
-                          image: AssetImage(widget.curretItem.image)))))
+                          image: NetworkImage(widget.curretItem.image)))))
           //
         ],
       ),
     );
   }
 
-  Widget _categoryWidget() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 0),
-      width: AppTheme.fullWidth(context),
-      height: 80,
-      child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              AppData.showThumbnailList.map((x) => _thumbnail(x)).toList()),
-    );
-  }
+
 
   Widget _thumbnail(String image) {
     return AnimatedBuilder(
@@ -411,6 +398,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   @override
   Widget build(BuildContext context) {
+
     widget.curretItem = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
@@ -430,9 +418,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  _appBar(),
+                  _appBar(widget.curretItem.isLiked),
                   _productImage(),
-                  _categoryWidget(),
                 ],
               ),
               _detailWidget()
