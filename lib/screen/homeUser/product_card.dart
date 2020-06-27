@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:watterplannet/class/product.dart';
 import 'package:watterplannet/theme/light_color.dart';
 
@@ -86,15 +87,19 @@ class _ProductCardState extends State<ProductCard> {
                       (
                           // width: MediaQuery.of(context).size.width,
                            height: MediaQuery.of(context).size.height * .1,
-                          decoration: BoxDecoration
-                          (
-                              image: DecorationImage(
-                                  fit: BoxFit.contain,
-                                  image: NetworkImage(model.image))
-                          ) 
-                      ),
-                    )
+                           child: Image.network
+                           (
+                              model.image,
+                              
+                              loadingBuilder: (context, child , progress) 
+                              {
+                                return progress == null
+                                ? child
+                                :  CircularProgressIndicator();
+                              }
 
+                            ),
+                    ))
                   ],
                 ),
                 AutoSizeText(

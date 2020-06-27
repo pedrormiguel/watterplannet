@@ -121,10 +121,20 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                   alignment: Alignment.topCenter,
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.35,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: NetworkImage(widget.curretItem.image)))))
+                  child: Image.network(
+                    widget.curretItem.image,
+                    loadingBuilder: (context, child , progress) {
+                      return progress == null
+                      ? child
+                      : LinearProgressIndicator();
+                    },
+                    ),
+                  // decoration: BoxDecoration(
+                  //     image: DecorationImage(
+                  //         fit: BoxFit.contain,
+                  //         image: NetworkImage(widget.curretItem.image, )))
+                  
+                  ))
           //
         ],
       ),

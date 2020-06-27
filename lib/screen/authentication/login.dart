@@ -29,7 +29,7 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
 
 
   String _email, _password, _address, _name, _lastName;
-  String correo = "claro@o.com";
+  String correo = "pedrormiguel@outlook.es";
 
   String _companyName,
       _contactPhone,
