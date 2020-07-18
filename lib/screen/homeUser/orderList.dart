@@ -6,6 +6,7 @@ import 'package:watterplannet/class/ordenes/order.dart';
 import 'package:watterplannet/class/ordenes/orderDetail.dart';
 import 'package:watterplannet/class/ordenes/orderDetailProduct.dart';
 import 'package:watterplannet/services/Auth.dart';
+import 'package:watterplannet/utils/FoldingCell/FoldingWidget.dart';
 
 class OrderList extends StatefulWidget {
   @override
@@ -14,27 +15,21 @@ class OrderList extends StatefulWidget {
   // Order _order = new Order();
 }
 
-class _OrderListState extends State<OrderList> 
-{
+class _OrderListState extends State<OrderList> {
   @override
-  Widget build(BuildContext context) 
-  {
+  Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints.expand(),
       margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * .10),
       child: StreamBuilder(
-
         stream: Order.orderRef
             .orderByChild("consumerID")
             .equalTo(Authentication.result.user.uid)
             .onValue,
-
-        builder: (context, AsyncSnapshot<Event> snapshot) 
-        {
+        builder: (context, AsyncSnapshot<Event> snapshot) {
           var grade = snapshot.connectionState.toString();
 
-          switch (grade) 
-          {
+          switch (grade) {
             case "ConnectionState.active":
               Map<dynamic, dynamic> values =
                   snapshot.data.snapshot.value != null
@@ -59,8 +54,7 @@ class _OrderListState extends State<OrderList>
     );
   }
 
-  Widget wrapperWidget(Map<dynamic, dynamic> values) 
-  {
+  Widget wrapperWidget(Map<dynamic, dynamic> values) {
     return FutureBuilder<List<Order>>(
         future: Order.getListOrderConsumer(values),
         builder: (context, snapshot) {
@@ -90,81 +84,46 @@ class _OrderListState extends State<OrderList>
         });
   }
 
-  Widget cardCustom(List<Order> elements) 
-  {
+  Widget cardCustom(List<Order> elements) {
     return ListView.builder(
         itemCount: elements.length,
-        itemBuilder: (context, index) 
-        {
+        itemBuilder: (context, index) {
           return Center(
             child: Container(
-              width: double.infinity,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                color: Colors.pink,
-                elevation: 10,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: Icon(Icons.art_track, size: 50),
-                      title: Text(elements.elementAt(index).orderShipToAddres,
-                          style: TextStyle(color: Colors.white)),
-                      subtitle: Text(
-                          elements.elementAt(index).getDateFormated(),
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                    FutureBuilder<List<OrderDetail>>(
-                      future: Order.getListOrderDetail(
-                          elements.elementAt(index).orderIDOrderDetailId),
+                width: double.infinity,
+                child:
+                    Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+                  FutureBuilder<List<OrderDetail>>(
+                    future: Order.getListOrderDetail(
+                        elements.elementAt(index).orderIDOrderDetailId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<Widget> toShow = List<Widget>();
 
-                      builder: (context, snapshot) 
-                      {
-                        if (snapshot.hasData) 
-                        {
-                              List<Widget> toShow = List<Widget>();
-
-                              snapshot.data.forEach((element) 
-                              {
-                                    element.orderDetailProducts.forEach((element) 
-                                    {
-                                      toShow.add(orderDetailsProdutcs(element));
-                                    });
-                              });
-
-                          return Column(children: toShow);
-
-
-                        } else if (snapshot.hasError) {}
-
-                        return CircularProgressIndicator();
-                      },
-                    ),
-
-                    ButtonBar(
-                      children: <Widget>[
-                        Text('${elements.elementAt(index).orderStatus}',
-                            style: TextStyle(color: Colors.white)),
-                        FlatButton(
-                          child: Text('Delete',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                          onPressed: () async {
-                            await elements
+                        snapshot.data.forEach((element) {
+                          toShow.add(FoldingCellSimpleDemo(
+                            id: elements.elementAt(index).orderID,
+                            address:
+                                elements.elementAt(index).orderShipToAddres,
+                            dateOfOrder: elements
                                 .elementAt(index)
-                                .changeStatusToNotShowOrder(
-                                    elements.elementAt(index).orderID);
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                                .getDateFormated()
+                                .toUpperCase(),
+                            statusOrder: elements.elementAt(index).orderStatus,
+                            changeToNotShowOrder: elements
+                                .elementAt(index)
+                                .changeStatusToNotShowOrder,
+                            orderDetailProduct: element.orderDetailProducts,
+                          ));
+                        });
+
+                        return Column(children: toShow);
+                      } else if (snapshot.hasError) {}
+
+                      return CircularProgressIndicator();
+                    },
+                  ),
+                ])),
           );
         });
   }
@@ -190,7 +149,9 @@ class _OrderListState extends State<OrderList>
             ),
             ButtonBar(
               children: <Widget>[
-                Text("SubTotal ${element.getTotalProduct()}".toUpperCase(),
+                Text(
+                    "SubTotal ${element.getTotalProductFormated()}"
+                        .toUpperCase(),
                     style: TextStyle(
                         color: Colors.pink, fontWeight: FontWeight.bold)),
               ],

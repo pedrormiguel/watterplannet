@@ -16,8 +16,8 @@ Map<String, WidgetBuilder> getApplicationRoute() {
       '/':            (BuildContext context) => Login()        ,
       'home'        : (BuildContext context) => HomePage()  ,
       'detail'      : (BuildContext context) => ProductDetailPage(),
-      'mainPage'    : (BuildContext context) => MainPage(),
-      'shopingCart' : (BuildContext context ) => ShopingCartPage(),
+      'mainPage'    : (BuildContext context) => MainPage("WatterPlannet"),
+      'shopingCart' : (BuildContext context ) => ShopingCartPage("Carrito de Compra"),
 
 
       'mainPageBussines'     : (BuildContext context) => MainPageBussines(),

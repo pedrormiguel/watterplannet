@@ -1,241 +1,136 @@
 import 'package:flutter/material.dart';
 import 'package:watterplannet/class/usuarios/user.dart';
-import 'package:watterplannet/screen/BottomNavigationBar/bootom_navigation_bar.dart';
 import 'package:watterplannet/screen/homeUser/home_page.dart';
 import 'package:watterplannet/screen/homeUser/orderList.dart';
 import 'package:watterplannet/screen/homeUser/shopping_cart_page.dart';
-import 'package:watterplannet/screen/homeUser/title_text.dart';
-import 'package:watterplannet/theme/light_color.dart';
-import 'package:watterplannet/theme/theme.dart';
 import 'package:watterplannet/utils/drawer/drawerMenu.dart';
 import 'package:watterplannet/utils/drawer/drawerOptions.dart';
 
 class MainPage extends StatefulWidget {
-
-  MainPage({Key key, this.title}) : super(key: key);
-
+  MainPage(this.title);
+  static User user;
   final String title;
-  static int selectWidget = 0;
-  Widget p ;
 
   @override
   _MainPageState createState() => _MainPageState();
 }
 
-
-
 class _MainPageState extends State<MainPage> {
-  bool isHomePageSelected = true;
 
-    final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+      PageController _pageController;
+      int _page = 0;
 
-  
 
-  Widget _appBar() {
-    return Container(
-      padding: AppTheme.padding,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          RotatedBox(
-            quarterTurns: 4,
-            child: _icon(Icons.sort, color: Colors.black54),
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(13)),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Color(0xfff8f8f8),
-                      blurRadius: 10,
-                      spreadRadius: 10),
-                ],
-              ),
-              child: Image.asset('assets/images/user.png'),
-            ),
-          )
-        ],
-      ),
-    );
-  }
+      @override
+      void initState() {
+        super.initState();
+        _pageController = new PageController();
+      }
 
-  Widget _icon(IconData icon, {Color color = LightColor.iconColor}) {
-    return InkWell(
-      onTap: () {
-          _scaffoldKey.currentState.openDrawer();
-      },
-          child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(13)),
-            color: Theme.of(context).backgroundColor,
-            boxShadow: AppTheme.shadow),
-        child: Icon(
-          icon,
-          color: color,
-        ),
-      ),
-    );
-  }
+      @override
+      void dispose() {
+        super.dispose();
+        _pageController.dispose();
+      }
 
-  Widget _title() {
-    return Container(
-        margin: AppTheme.padding,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TitleText(
-                  text: isHomePageSelected ? 'Our' : 'Shopping',
-                  fontSize: 27,
-                  fontWeight: FontWeight.w400,
-                ),
-                TitleText(
-                  text: isHomePageSelected ? 'Products' : 'Cart',
-                  fontSize: 27,
-                  fontWeight: FontWeight.w700,
-                ),
-              ],
-            ),
-            Spacer(),
-            !isHomePageSelected
-                ? Icon(
-                    Icons.delete_outline,
-                    color: LightColor.orange,
-                  )
-                : SizedBox()
-          ],
-        ));
-}
+       void navigationTapped(int page) {
+        // Animating to the page.
+        // You can use whatever duration and curve you like
+       _pageController.animateToPage(page,
+        duration: const Duration(milliseconds: 300), curve: Curves.ease);
+       }
 
-  void onBottomIconPressed(int index) {
+         void onPageChanged(int page) {
+          setState(() {
+            this._page = page;
+          });
+        }
 
-    if (index == 0 ) 
-    {
-      setState(() {
-         widget.p = HomePage();
-        isHomePageSelected = true;
-      });
-    } else if(index == 1) 
-    {
-      setState(() {
-        widget.p = ShopingCartPage();
-        isHomePageSelected = false;
-      });
-    } else if( index ==2 ) 
-    {
-      setState(() {
-        widget.p = OrderList();
-      });
-    }
-    else 
-      setState(() 
-      {
-        widget.p = Text('PAGE 3');
-      });
-
-  }
 
   @override
-  Widget build(BuildContext ctn) 
-  {
+  Widget build(BuildContext ctn) {
+    MainPage.user = ModalRoute.of(context).settings.arguments;
 
-      User user = ModalRoute.of(context).settings.arguments;
+    List<DrawerOptions> draweOptions = [];
 
+    draweOptions.add(new DrawerOptions(
+      title: "Carrito de Compras",
+      icon: Icon(Icons.filter_none),
+      function: () => Navigator.pushNamed(ctn, 'shopingCart'),
+    ));
 
-      List<DrawerOptions> draweOptions = [];
+    draweOptions.add(new DrawerOptions(
+      title: "Cerrar sesion",
+      icon: Icon(Icons.exit_to_app),
+      function: () => Navigator.pushReplacementNamed(ctn, '/'),
+    ));
 
-    draweOptions.add
-    (
-       new DrawerOptions
-           (
-              title:"Carrito de Compras"   ,
-              icon:Icon(Icons.filter_none) ,
-              function: () => Navigator.pushNamed(ctn, 'shopingCart'), 
-           )
+    DraweMenu draweMenu = new DraweMenu(
+      user: MainPage.user,
+      drawerOptions: draweOptions,
     );
 
-    draweOptions.add
-    (
-       new DrawerOptions
-         ( 
-            title:"Cerrar sesion",
-            icon:Icon(Icons.exit_to_app),
-           function: () => Navigator.pushReplacementNamed(ctn, '/'), 
-         )
-    );
-
-     DraweMenu draweMenu = new DraweMenu 
-    (
-      user: user,
-      drawerOptions: draweOptions ,
-
-    );
-
-
-    return Scaffold
-    (
-      key: _scaffoldKey,
-      drawer: draweMenu,
-      body: SafeArea 
+      return Scaffold
       (
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            SingleChildScrollView
-            (
-              child: Container
-              (
-                height: AppTheme.fullHeight(context) ,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                  colors: [
-                    Color(0xfffbfbfb),
-                    Color(0xfff7f7f7),
-                  ],
-                 begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                )),
-                child: Column
-                (
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>
-                  [
-                    _appBar() ,
-                    _title()  ,
-                    Expanded
-                    (
-                        child: AnimatedSwitcher
-                        (
-                            duration: Duration(milliseconds: 300),
-                            switchInCurve: Curves.easeInToLinear,
-                            switchOutCurve: Curves.easeOutBack,
-                            child: widget.p == null ? HomePage() : widget.p,
-                        )
-                    )
-                  ],
-                ),
-              ),
-            ) 
-            ,
-            Positioned
-            (
-                bottom: 0,
-                right:  0,
-                child: CustomBottomNavigationBar
-                (
-                  key: context.widget.key,
-                  onIconPresedCallback: onBottomIconPressed,
-                )
-            )
-          ],
+        drawer: draweMenu,
+        appBar: AppBar(title: Text(widget.title)),
+        body: PageView(
+          children: <Widget>[HomePage(), ShopingCartPage("Carrito de Compra"), OrderList()],
+          onPageChanged: onPageChanged,
+          controller: _pageController,
         ),
-      ),
-    );
+        bottomNavigationBar: Theme( 
+               data: Theme.of(context).copyWith(
+                 canvasColor: Color(0xFF167F67)
+               ),
+               child: bottomBar() ),
+      );
   }
+
+ BottomNavigationBar bottomBar() =>
+        BottomNavigationBar(
+                  items: [
+
+                    new BottomNavigationBarItem(
+                        icon: new Icon(
+                          Icons.home,
+                          color: const Color(0xFFFFFFFF),
+                        ),
+                        title: new Text(
+                          "Home",
+                          style: new TextStyle(
+                            color: const Color(0xFFFFFFFF),
+                          ),
+                        )),
+
+                    new BottomNavigationBarItem(
+                        icon: new Icon(
+                          Icons.shopping_basket,
+                          color: const Color(0xFFFFFFFF),
+                        ),
+                        title: new Text(
+                          "Carrito",
+                          style: new TextStyle(
+                            color: const Color(0xFFFFFFFF),
+                          ),
+                        )),
+
+                    new BottomNavigationBarItem(
+                        icon: new Icon(
+                          Icons.local_offer,
+                          color: const Color(0xFFFFFFFF),
+                        ),
+                        title: new Text(
+                          "Ordenes",
+                          style: new TextStyle(
+                            color: const Color(0xFFFFFFFF),
+                          ),
+                        ))
+                  ],
+                  onTap: navigationTapped,
+                  currentIndex: _page,
+                  selectedItemColor: Colors.red,
+                );
+
 
 }

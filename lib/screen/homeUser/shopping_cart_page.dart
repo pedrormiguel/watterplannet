@@ -11,7 +11,8 @@ import 'package:watterplannet/theme/theme.dart';
 import 'package:watterplannet/utils/FlushBart.dart';
 
 class ShopingCartPage extends StatefulWidget {
-  const ShopingCartPage({Key key}) : super(key: key);
+  final String title;
+  const ShopingCartPage(this.title,{Key key, }) : super(key: key);
 
   @override
   _ShopingCartPageState createState() => _ShopingCartPageState();
@@ -192,9 +193,7 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    
-    Scaffold(
+    return Scaffold(
         body: Container(
       padding: AppTheme.padding,
       child: SingleChildScrollView(
@@ -216,27 +215,20 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
   }
 
   Future<void> completedBuy() async {
-    
-    if (AppData.cartList.itemSelect.length <= 0) 
-    {
+    if (AppData.cartList.itemSelect.length <= 0) {
       FlusBar().getBar(
           context: context, message: 'Agrega algun producto al carrito.');
-    } 
-    else if(AppData.cartList.itemSelect != null)
-    {
-      
+    } else if (AppData.cartList.itemSelect != null) {
       // TODO Dirreccion buscar direccion de cliente.
 
-      new Order
-          (
-            consumerID: Authentication.result.user.uid,
-            orderShipToAddres: "PRADO" //Todo Arreglar direccion
+      new Order(
+          consumerID: Authentication.result.user.uid,
+          orderShipToAddres: "PRADO" //Todo Arreglar direccion
           );
 
-      setState( () => AppData.cartList.itemSelect.clear()  );
+      setState(() => AppData.cartList.itemSelect.clear());
 
       FlusBar().getBar(context: context, message: 'Orden Completada.');
-
     }
   }
 }

@@ -1407,16 +1407,16 @@ class _LoginScreenState extends State<Login> with TickerProviderStateMixin {
       values.forEach((key, value) 
       {
         user = Supplier.fromMap(
-            supplierID: key,
-            companyName: value["companyName"],
-            address: value["address"],
-            city: value["city"],
-            phoneNumber: value["contactPhone"],
-            email: value["email"],
-            keyAccountUID: value["keyAccountUID"],
-            password: value["password"]);
+            supplierID:       key,
+            companyName:      value["companyName"],
+            imageUser:        value["imageUser"] == null ? "https://asociaciondenutriologia.org/img/default_user.png" : value["imageUser"],
+            address:          value["address"],
+            city:             value["city"],
+            phoneNumber:      value["contactPhone"],
+            email:            value["email"],
+            keyAccountUID:    value["keyAccountUID"],
+            password:         value["password"]);
       });
-
 
       return user;
     }

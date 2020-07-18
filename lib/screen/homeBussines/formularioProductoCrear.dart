@@ -21,7 +21,7 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
   String titleTextImage = "Picture no selected";
   File _image;
   String ulrImage;
-  
+
   ServicesFirebaseImage _servicesFirebaseImage = new ServicesFirebaseImage();
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -35,346 +35,333 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
             //style: TextStyle(fontSize: 50),
             style: TextStyle(fontWeight: FontWeight.bold),
             maxLines: 1,
-            
           ),
         ),
         body: SingleChildScrollView(
-                  child: Container(
+          child: Container(
               height: MediaQuery.of(context).size.height,
-         
               child: Center(
                 child: Form(
                   key: _formkey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>
-                    [
-                   
-                        Row(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          new Expanded(
+                            child: new Padding(
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: new Text(
+                                'titulo'.toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent,
+                                  fontSize: 15.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 40.0, right: 40.0),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                                color: Colors.blueAccent,
+                                width: 0.5,
+                                style: BorderStyle.solid),
+                          ),
+                        ),
+                        child: new Row(
                           children: <Widget>[
                             new Expanded(
-                              child: new Padding(
-                                padding: const EdgeInsets.only(left: 40.0),
+                              child: TextFormField(
+                                textAlign: TextAlign.left,
+                                keyboardType: TextInputType.text,
+                                onSaved: (input) => name = input,
+                                validator: (input) => validator(input, 5),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Nombre del producto',
+                                  hintStyle: TextStyle(color: Colors.blueGrey),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        height: 10.0,
+                      ),
 
-                                child: new Text
-                                (
-                                  'titulo'.toUpperCase(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.redAccent,
-                                    fontSize: 15.0,
-                                  ),
+                      Row(
+                        children: <Widget>[
+                          new Expanded(
+                            child: new Padding(
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: new Text(
+                                'Categoria'.toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent,
+                                  fontSize: 15.0,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 40.0, right: 40.0),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  color: Colors.blueAccent,
-                                  width: 0.5,
-                                  style: BorderStyle.solid),
-                            ),
                           ),
-                          child: new Row(
-                            children: <Widget>[
-                              new Expanded(
-                                child: TextFormField(
-                                  textAlign: TextAlign.left,
-                                  keyboardType: TextInputType.text,
-                                  onSaved: (input) => name = input,
-                                  validator: (input) => validator(input, 5),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Nombre del producto',
-                                    hintStyle:
-                                        TextStyle(color: Colors.blueGrey),
-                                  ),
-                                ),
-                              ),
-                            ],
+                        ],
+                      ), //Cabezera
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(
+                            left: 40.0, right: 40.0, top: 2),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                                color: Colors.blueAccent,
+                                width: 0.5,
+                                style: BorderStyle.solid),
                           ),
                         ),
-                        Divider(
-                          height: 10.0,
-                        ),
-                     
-                        Row(
+                        child: new Row(
                           children: <Widget>[
                             new Expanded(
-                              child: new Padding(
-                                padding: const EdgeInsets.only(left: 40.0),
-                                child: new Text(
-                                  'Categoria'.toUpperCase(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.redAccent,
-                                    fontSize: 15.0,
-                                  ),
+                              child: TextFormField(
+                                textAlign: TextAlign.left,
+                                keyboardType: TextInputType.text,
+                                onSaved: (input) => category = input,
+                                validator: (input) => validator(input, 3),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Lacteo, dulce, gaseoso ...',
+                                  hintStyle: TextStyle(color: Colors.blueGrey),
                                 ),
                               ),
                             ),
                           ],
-                        ), //Cabezera
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(
-                              left: 40.0, right: 40.0, top: 2),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  color: Colors.blueAccent,
-                                  width: 0.5,
-                                  style: BorderStyle.solid),
-                            ),
-                          ),
-                          child: new Row(
-                            children: <Widget>[
-                              new Expanded(
-                                child: TextFormField(
-                                  textAlign: TextAlign.left,
-                                  keyboardType: TextInputType.text,
-                                  onSaved: (input) => category = input,
-                                  validator: (input) => validator(input, 3),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Lacteo, dulce, gaseoso ...',
-                                    hintStyle:
-                                        TextStyle(color: Colors.blueGrey),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
-                        Divider(
-                          height: 10.0,
-                        ),
-                      
-                      
-                        Row(
-                          children: <Widget>[
-                            new Expanded(
-                              child: new Padding(
-                                padding: const EdgeInsets.only(left: 40.0),
-                                child: new Text(
-                                  'Descripcion'.toUpperCase(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.redAccent,
-                                    fontSize: 15.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ), //Cabezera
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(
-                              left: 40.0, right: 40.0, top: 2),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  color: Colors.blueAccent,
-                                  width: 0.5,
-                                  style: BorderStyle.solid),
-                            ),
-                          ),
-                          child: new Row(
-                            children: <Widget>[
-                              new Expanded(
-                                child: TextFormField(
-                                  textAlign: TextAlign.left,
-                                  keyboardType: TextInputType.text,
-                                  onSaved: (input) => description = input,
-                                  validator: (input) => validator(input, 3),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Detalles del producto',
-                                    hintStyle:
-                                        TextStyle(color: Colors.blueGrey),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Divider(
-                          height: 10.0,
-                        ),
-                    
-                        Row (
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>
-                          [
-                            new Expanded
-                            (
-                              child: new Padding
-                              (
-                                padding: const EdgeInsets.only(left: 40.0),
-                                child: new Text (
-                                 'Photo'.toUpperCase(),
-                                  style: TextStyle (
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.redAccent,
-                                    fontSize: 15.0,
-                                  ),
-                                ),
-                              )
-                            ),
-                          ],
-                        ),
+                      ),
+                      Divider(
+                        height: 10.0,
+                      ),
 
-                         ButtonBar
-                         ( 
-                           alignment: MainAxisAlignment.spaceEvenly,
-                           children: <Widget>
-                            [
-                              Padding(
-                                padding: const EdgeInsets.only(left:20.0),
-                                child: AutoSizeText(titleTextImage, textAlign: TextAlign.start,style: TextStyle(fontWeight: FontWeight.bold),),
+                      Row(
+                        children: <Widget>[
+                          new Expanded(
+                            child: new Padding(
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: new Text(
+                                'Descripcion'.toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent,
+                                  fontSize: 15.0,
+                                ),
                               ),
-                              RaisedButton(onPressed: getImageFromCamera, child: Icon(Icons.camera_alt),),
-                              FloatingActionButton(onPressed: getImageFromGallery, mini: true, child: Icon(Icons.create_new_folder),),
-                            ],
-                         ),
-                         Divider(
-                          height: 10.0,
+                            ),
+                          ),
+                        ],
+                      ), //Cabezera
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(
+                            left: 40.0, right: 40.0, top: 2),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                                color: Colors.blueAccent,
+                                width: 0.5,
+                                style: BorderStyle.solid),
+                          ),
                         ),
+                        child: new Row(
+                          children: <Widget>[
+                            new Expanded(
+                              child: TextFormField(
+                                textAlign: TextAlign.left,
+                                keyboardType: TextInputType.text,
+                                onSaved: (input) => description = input,
+                                validator: (input) => validator(input, 3),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Detalles del producto',
+                                  hintStyle: TextStyle(color: Colors.blueGrey),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        height: 10.0,
+                      ),
 
-                        Row(
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          new Expanded(
+                              child: new Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: new Text(
+                              'Photo'.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          )),
+                        ],
+                      ),
+
+                      ButtonBar(
+                        alignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: AutoSizeText(
+                              titleTextImage,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          RaisedButton(
+                            onPressed: getImageFromCamera,
+                            child: Icon(Icons.camera_alt),
+                          ),
+                          FloatingActionButton(
+                            onPressed: getImageFromGallery,
+                            mini: true,
+                            child: Icon(Icons.create_new_folder),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        height: 10.0,
+                      ),
+
+                      Row(
+                        children: <Widget>[
+                          new Expanded(
+                            child: new Padding(
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: new Text(
+                                'Valor del articulo'.toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent,
+                                  fontSize: 15.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ), //Cabezera
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(
+                            left: 40.0, right: 40.0, top: 2),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                                color: Colors.blueAccent,
+                                width: 0.5,
+                                style: BorderStyle.solid),
+                          ),
+                        ),
+                        child: new Row(
                           children: <Widget>[
                             new Expanded(
-                              child: new Padding(
-                                padding: const EdgeInsets.only(left: 40.0),
-                                child: new Text(
-                                  'Valor del articulo'.toUpperCase(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.redAccent,
-                                    fontSize: 15.0,
-                                  ),
+                              child: TextFormField(
+                                textAlign: TextAlign.left,
+                                keyboardType: TextInputType.number,
+                                onSaved: (input) => price = double.parse(input),
+                                validator: (input) => validator(input, 1),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Precio por unidad',
+                                  hintStyle: TextStyle(color: Colors.blueGrey),
                                 ),
                               ),
                             ),
                           ],
-                        ), //Cabezera
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(
-                              left: 40.0, right: 40.0, top: 2),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  color: Colors.blueAccent,
-                                  width: 0.5,
-                                  style: BorderStyle.solid),
-                            ),
-                          ),
-                          child: new Row(
-                            children: <Widget>[
-                              new Expanded(
-                                child: TextFormField(
-                                  textAlign: TextAlign.left,
-                                  keyboardType: TextInputType.number,
-                                  onSaved: (input) =>
-                                      price = double.parse(input),
-                                  validator: (input) => validator(input, 1),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Precio por unidad',
-                                    hintStyle:
-                                        TextStyle(color: Colors.blueGrey),
-                                  ),
+                        ),
+                      ),
+                      Divider(
+                        height: 10.0,
+                      ),
+
+                      Row(
+                        children: <Widget>[
+                          new Expanded(
+                            child: new Padding(
+                              padding: const EdgeInsets.only(left: 40.0),
+                              child: new Text(
+                                'Unidad en Stock'.toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent,
+                                  fontSize: 15.0,
                                 ),
                               ),
-                            ],
+                            ),
+                          ),
+                        ],
+                      ), //Cabezera
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(
+                            left: 40.0, right: 40.0, top: 2),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                                color: Colors.blueAccent,
+                                width: 0.5,
+                                style: BorderStyle.solid),
                           ),
                         ),
-                        Divider(
-                          height: 10.0,
-                        ),
-                     
-                        Row(
+                        child: new Row(
                           children: <Widget>[
                             new Expanded(
-                              child: new Padding(
-                                padding: const EdgeInsets.only(left: 40.0),
-                                child: new Text(
-                                  'Unidad en Stock'.toUpperCase(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.redAccent,
-                                    fontSize: 15.0,
-                                  ),
+                              child: TextFormField(
+                                textAlign: TextAlign.left,
+                                keyboardType: TextInputType.number,
+                                onSaved: (input) =>
+                                    unitInStock = int.parse(input),
+                                validator: (input) => validator(input, 1),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Unidades disponibles',
+                                  hintStyle: TextStyle(color: Colors.blueGrey),
                                 ),
                               ),
                             ),
                           ],
-                        ), //Cabezera
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(
-                              left: 40.0, right: 40.0, top: 2),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  color: Colors.blueAccent,
-                                  width: 0.5,
-                                  style: BorderStyle.solid),
-                            ),
-                          ),
-                          child: new Row(
-                            children: <Widget>[
-                              new Expanded(
-                                child: TextFormField(
-                                  textAlign: TextAlign.left,
-                                  keyboardType: TextInputType.number,
-                                  onSaved: (input) =>
-                                      unitInStock = int.parse(input),
-                                  validator: (input) => validator(input, 1),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Unidades disponibles',
-                                    hintStyle:
-                                        TextStyle(color: Colors.blueGrey),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
-                        Divider(
-                          height: 10.0,
-                        ),
-                      
-                        Container (
+                      ),
+                      Divider(
+                        height: 10.0,
+                      ),
+
+                      Container(
                         // Boton SIGN UP
                         width: MediaQuery.of(context).size.width,
                         margin: const EdgeInsets.only(
-                            left: 30.0,
-                            right: 30.0,
-                            top: 20.0,
-                            bottom: 5.0),
+                            left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
                         alignment: Alignment.center,
                         child: new Row(
                           children: <Widget>[
                             new Expanded(
                               child: new FlatButton(
                                 shape: new RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(30.0),
+                                  borderRadius: new BorderRadius.circular(30.0),
                                 ),
                                 color: Colors.redAccent,
                                 onPressed: agregarProducto,
@@ -384,8 +371,7 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
                                     horizontal: 20.0,
                                   ),
                                   child: new Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       new Expanded(
                                         child: Text(
@@ -503,7 +489,7 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
   }
 
   Future<void> getImageFromCamera() async {
-     _image = await _servicesFirebaseImage.getImageFromCamera();
+    _image = await _servicesFirebaseImage.getImageFromCamera();
 
     setState(() {
       titleTextImage = "Image Selected From Camera";
@@ -513,18 +499,19 @@ class _FormularioProductoCrearState extends State<FormularioProductoCrear> {
   Future<void> getImageFromGallery() async {
     _image = await _servicesFirebaseImage.getImageFromGallery();
 
-     setState(() {
-          titleTextImage = "Image Selected From Gallery";
-     });
-  
+    setState(() {
+      titleTextImage = "Image Selected From Gallery";
+    });
   }
+
+  
 
   Future<void> uploadImage() async {
-
-     await  _servicesFirebaseImage.uploadPicture();
+    await _servicesFirebaseImage.uploadPicture();
   }
 
-  Future<String> getUrlImage () async =>  ulrImage = await _servicesFirebaseImage.getUrl();
+  Future<String> getUrlImage() async =>
+      ulrImage = await _servicesFirebaseImage.getUrl();
 
   void asignValue(String campo, String value) {
     campo = value;

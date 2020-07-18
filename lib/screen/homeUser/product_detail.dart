@@ -143,31 +143,6 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
 
 
-  Widget _thumbnail(String image) {
-    return AnimatedBuilder(
-        animation: animation,
-        //  builder: null,
-        builder: (context, child) => AnimatedOpacity(
-              opacity: animation.value,
-              duration: Duration(milliseconds: 500),
-              child: child,
-            ),
-        child: Container(
-          height: 40,
-          width: 50,
-          margin: EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: LightColor.grey,
-            ),
-            borderRadius: BorderRadius.all(
-              Radius.circular(13),
-            ),
-            // color: Theme.of(context).backgroundColor,
-          ),
-          child: Image.asset(image),
-        ));
-  }
 
   Widget _detailWidget() {
     return DraggableScrollableSheet(
@@ -263,96 +238,11 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     );
   }
 
-  Widget _availableSize() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        TitleText(
-          text: "Available Size",
-          fontSize: 14,
-        ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _sizeWidget("US 6"),
-            _sizeWidget("US 7", isSelected: true),
-            _sizeWidget("US 8"),
-            _sizeWidget("US 9"),
-          ],
-        )
-      ],
-    );
-  }
 
-  Widget _sizeWidget(String text,
-      {Color color = LightColor.iconColor, bool isSelected = false}) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: LightColor.iconColor,
-            style: !isSelected ? BorderStyle.solid : BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color:
-            isSelected ? LightColor.orange : Theme.of(context).backgroundColor,
-      ),
-      child: TitleText(
-        text: text,
-        fontSize: 16,
-        color: isSelected ? LightColor.background : LightColor.titleTextColor,
-      ),
-    );
-  }
+ 
 
-  Widget _availableColor() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        TitleText(
-          text: "Available Size",
-          fontSize: 14,
-        ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            _colorWidget(LightColor.yellowColor, isSelected: true),
-            SizedBox(
-              width: 30,
-            ),
-            _colorWidget(LightColor.lightBlue),
-            SizedBox(
-              width: 30,
-            ),
-            _colorWidget(LightColor.black),
-            SizedBox(
-              width: 30,
-            ),
-            _colorWidget(LightColor.red),
-            SizedBox(
-              width: 30,
-            ),
-            _colorWidget(LightColor.skyBlue),
-          ],
-        )
-      ],
-    );
-  }
+  
 
-  Widget _colorWidget(Color color, {bool isSelected = false}) {
-    return CircleAvatar(
-      radius: 12,
-      backgroundColor: color.withAlpha(150),
-      child: isSelected
-          ? Icon(
-              Icons.check_circle,
-              color: color,
-              size: 18,
-            )
-          : CircleAvatar(radius: 7, backgroundColor: color),
-    );
-  }
 
   Widget _description() {
     return Column(

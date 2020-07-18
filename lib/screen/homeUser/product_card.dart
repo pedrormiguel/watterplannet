@@ -13,7 +13,6 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  
   Product model;
 
   @override
@@ -24,96 +23,75 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell
-    (
-      onTap: () =>
-        Navigator.of(context).pushNamed('detail',arguments: model) ,
-
+    return InkWell(
+      onTap: () => Navigator.of(context).pushNamed('detail', arguments: model),
       child: Container(
-        decoration: BoxDecoration
-        (
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blueGrey),
           color: LightColor.background,
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          boxShadow: <BoxShadow>
-          [
-            BoxShadow(color: Color(0xfff8f8f8), blurRadius: 15, spreadRadius: 10),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Color(0xfff8f8f8), blurRadius: 15, spreadRadius: 10),
           ],
         ),
-
         margin: EdgeInsets.symmetric(vertical: !model.isSelected ? 20 : 0),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-
-        child: Stack
-        (
+        child: Stack(
           alignment: Alignment.center,
-          children: <Widget>
-          [
-            Positioned
-            (
-              left: -10,
-              top : -15,
-              child: IconButton
-              (
-                  icon: Icon
-                  (
-                    model.isLiked ? Icons.favorite : Icons.favorite_border,
-                    color:
-                        model.isLiked ? LightColor.red : LightColor.iconColor,
-                  ),
-                  onPressed: () async => await model.updateIsLiked()
-              )
-            ),
-            Column
-            (
+          children: <Widget>[
+            Positioned(
+                left: -10,
+                top: -15,
+                child: IconButton(
+                    icon: Icon(
+                      model.isLiked ? Icons.favorite : Icons.favorite_border,
+                      color:
+                          model.isLiked ? LightColor.red : LightColor.iconColor,
+                    ),
+                    onPressed: () async => await model.updateIsLiked())),
+            Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>
-              [
+              children: <Widget>[
                 SizedBox(height: model.isSelected ? 15 : 0),
                 Stack(
                   alignment: Alignment.center,
-
-                  children: <Widget>
-                  [
-                    CircleAvatar
-                    (
-                        radius: 50,
-                        backgroundColor: LightColor.orange.withAlpha(40),
-                    ) ,
-
-                    SafeArea
-                    (
-                      child: Container
-                      (
-                          // width: MediaQuery.of(context).size.width,
-                           height: MediaQuery.of(context).size.height * .1,
-                           child: Image.network
-                           (
-                              model.image,
-                              
-                              loadingBuilder: (context, child , progress) 
-                              {
-                                return progress == null
-                                ? child
-                                :  CircularProgressIndicator();
-                              }
-
-                            ),
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: LightColor.orange.withAlpha(40),
+                    ),
+                    SafeArea(
+                        child: Container(
+                      // width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * .1,
+                      child: Image.network(model.image,
+                          loadingBuilder: (context, child, progress) {
+                        return progress == null
+                            ? child
+                            : CircularProgressIndicator(
+                                value: progress.expectedTotalBytes != null
+                                    ? progress.cumulativeBytesLoaded /
+                                        progress.expectedTotalBytes
+                                    : null);
+                      }),
                     ))
                   ],
                 ),
                 AutoSizeText(
-                   model.name,
-                  style: TextStyle( fontSize :model.isSelected ? 16 : 14),
+                  model.name,
+                  style: TextStyle(fontSize: model.isSelected ? 16 : 14),
                 ),
                 AutoSizeText(
-                   model.category,
-                  style: TextStyle( fontSize :model.isSelected ? 14 : 12, 
-                  color: LightColor.orange),
+                  model.category,
+                  style: TextStyle(
+                      fontSize: model.isSelected ? 14 : 12,
+                      color: LightColor.orange),
                 ),
                 AutoSizeText(
                   model.price.toString(),
-                  style: TextStyle( fontSize : model.isSelected ? 10 : 1),
+                  style: TextStyle(fontSize: model.isSelected ? 10 : 1),
                 ),
               ],
             ),
@@ -122,8 +100,4 @@ class _ProductCardState extends State<ProductCard> {
       ),
     );
   }
-
-  
-
- 
 }

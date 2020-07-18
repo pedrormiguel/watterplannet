@@ -34,6 +34,9 @@ dependencies:
   device_preview: 0.4.4
   flushbar: 1.10.2
   google_fonts: ^0.3.9
+  getwidget: ^1.1.0
+  intl: ^0.16.1
+  folding_cell: "^1.0.0"
 
 
 dev_dependencies:

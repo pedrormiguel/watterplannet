@@ -41,7 +41,7 @@ class _MyHomePageState extends State<HomePage> {
         width: MediaQuery.of(context).size.width,
         alignment: Alignment.center,
         height: 80,
-       // decoration: BoxDecoration(border: Border.all(color: Colors.teal)),
+        // decoration: BoxDecoration(border: Border.all(color: Colors.teal)),
         child: ListView(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
@@ -74,21 +74,17 @@ class _MyHomePageState extends State<HomePage> {
         padding: EdgeInsets.only(left: 20),
         scrollDirection: Axis.horizontal,
         children: listOfAllProduct
-            .map((product) => ProductCard(
-                  product: product,
-                ))
-            .toList());
+          .map((product) => ProductCard(
+                product: product,
+              ))
+          .toList());
   }
 
   Widget gridSystemBuild(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(10.0),
         child: StreamBuilder(
-
-            stream: Product.
-                    productRef
-                    .onValue,
-
+            stream: Product.productRef.onValue,
             builder: (context, AsyncSnapshot snapshot) {
               var grade = snapshot.connectionState.toString();
 
@@ -114,19 +110,18 @@ class _MyHomePageState extends State<HomePage> {
                   var listOfAllProduct = List<Product>();
 
                   values.forEach((key, value) {
-
-                    if(value["unitInStock"] > 0)
-                    listOfAllProduct.add(Product.fromMap(
-                        productID: key,
-                        image: value["image"],
-                        price: double.parse(value["price"].toString()),
-                        isSelected: value["isSelected"],
-                        name: value["name"],
-                        description: value["description"],
-                        category: value["category"],
-                        supplierID: value["supplierID"],
-                        isLiked: value["isliked"],
-                        unitInStock: value["unitInStock"]));
+                    if (value["unitInStock"] > 0)
+                      listOfAllProduct.add(Product.fromMap(
+                          productID: key,
+                          image: value["image"],
+                          price: double.parse(value["price"].toString()),
+                          isSelected: value["isSelected"],
+                          name: value["name"],
+                          description: value["description"],
+                          category: value["category"],
+                          supplierID: value["supplierID"],
+                          isLiked: value["isliked"],
+                          unitInStock: value["unitInStock"]));
                   });
 
                   return gridSystem(listOfAllProduct);

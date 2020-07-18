@@ -6,83 +6,63 @@ import 'package:watterplannet/class/product.dart';
 import 'package:watterplannet/class/usuarios/user.dart';
 import 'package:watterplannet/utils/drawer/drawerMenu.dart';
 import 'package:watterplannet/utils/drawer/drawerOptions.dart';
-
+import 'package:getwidget/getwidget.dart';
 
 class MainPageBussines extends StatefulWidget {
   MainPageBussines({Key key}) : super(key: key);
-  
+
   static FirebaseUser perfil;
   static User user;
-  
 
   @override
   _MainPageBussinesState createState() => _MainPageBussinesState();
 }
 
 class _MainPageBussinesState extends State<MainPageBussines> {
-
   DraweMenu draweMenu;
-  
+
   @override
-  void initState() 
-  {
+  void initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    MainPageBussines.user = ModalRoute.of(context).settings.arguments;
 
-       MainPageBussines.user = ModalRoute.of(context).settings.arguments;
-
-      draweMenu  = new DraweMenu 
-                    (
-                      user: MainPageBussines.user,
-                      drawerOptions: getOptionsMenu()
-                    );
+    draweMenu = new DraweMenu(
+        user: MainPageBussines.user, drawerOptions: getOptionsMenu());
 
     return Scaffold(
       appBar: AppBar(),
       body: listProduct(MainPageBussines.user.getIdFromFireBase()),
       drawer: draweMenu,
     );
-
   }
 
   List<DrawerOptions> getOptionsMenu() {
-        return 
-        [
-          DrawerOptions
-         ( 
-            title:"Agregar Producto",
-            icon:Icon(Icons.library_add),
-           function: () => Navigator.popAndPushNamed(context, 'formCreateProduct'), 
-         ),
-          DrawerOptions
-         ( 
-            title:"Cerrar sesion",
-            icon:Icon(Icons.exit_to_app),
-           function: () => Navigator.pushReplacementNamed(context, '/'), 
-         ),
+    return [
+      DrawerOptions(
+        title: "Agregar Producto",
+        icon: Icon(Icons.library_add),
+        function: () => Navigator.popAndPushNamed(context, 'formCreateProduct'),
+      ),
+      DrawerOptions(
+        title: "Cerrar sesion",
+        icon: Icon(Icons.exit_to_app),
+        function: () => Navigator.pushReplacementNamed(context, '/'),
+      ),
+    ];
+  }
 
-        ];
-  } 
-  
-  Widget listProduct(String id) 
-  {
+  Widget listProduct(String id) {
     return StreamBuilder(
-
-        stream: Product.productRef
-                .orderByChild("supplierID")
-                .equalTo(id)
-                .onValue,
-
-        builder: (context, AsyncSnapshot<Event> snapshot) 
-        {
-
+        stream:
+            Product.productRef.orderByChild("supplierID").equalTo(id).onValue,
+        builder: (context, AsyncSnapshot<Event> snapshot) {
           var grade = snapshot.connectionState.toString();
 
-          switch (grade) 
-          {
+          switch (grade) {
             case "ConnectionState.active":
               {
                 Map<dynamic, dynamic> values =
@@ -92,26 +72,23 @@ class _MainPageBussinesState extends State<MainPageBussines> {
 
                 var listSuppliesProduct = List<Product>();
 
-                 values.forEach( (key, value) 
-                 {
+                values.forEach((key, value) {
+                  listSuppliesProduct.add(Product.fromMap(
+                      productID: key,
+                      image: value["image"],
+                      price: double.parse(value["price"].toString()),
+                      isSelected: value["isSelected"],
+                      name: value["name"],
+                      description: value["description"],
+                      category: value["category"],
+                      supplierID: value["supplierID"],
+                      isLiked: value["isliked"],
+                      unitInStock: value["unitInStock"]));
+                });
 
-                    listSuppliesProduct.add
-                    (
-                      Product.fromMap(
-                                    productID: key,
-                                    image: value["image"],
-                                    price: double.parse(value["price"].toString()),
-                                    isSelected: value["isSelected"],
-                                    name: value["name"],
-                                    description: value["description"],
-                                    category: value["category"],
-                                    supplierID: value["supplierID"],
-                                    isLiked: value["isliked"],
-                                    unitInStock: value["unitInStock"])
-                    );
-                 });                  
-        
-                return listSuppliesProduct.length > 0 ? productListSupplier(listSuppliesProduct)  : withOutProduct();
+                return listSuppliesProduct.length > 0
+                    ? productListSupplier(listSuppliesProduct)
+                    : withOutProduct();
               }
               break;
 
@@ -128,106 +105,81 @@ class _MainPageBussinesState extends State<MainPageBussines> {
         });
   }
 
-  Widget productListSupplier( List<Product> listSuppliesProduct) {
-    return  Center(
-                        child: ListView.builder(
-                            itemCount: listSuppliesProduct.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                width: 200,
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  color: Colors.blue[200],
-                                  elevation: 10,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      ListTile(
-                                        // contentPadding:
-                                        //     EdgeInsets.only(top:10, left: 15),
-                                        leading: ClipOval
-                                        (
-                                          child: Image.network(
-                                            listSuppliesProduct[index]
-                                                .image,
-                                          ),
-                                        ),
-                                        title: Text(
-                                            listSuppliesProduct[index]
-                                                .name,
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                        subtitle: Text(
-                                            listSuppliesProduct[index]
-                                                .category,
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ),
-                                      ButtonBar(
-                                        children: <Widget>[
-                                          FlatButton(
-                                            child: Text('Editar',
-                                                style: TextStyle(
-                                                    color: Colors.white)),
-                                            onPressed: () {
-                                              Navigator.pushNamed(
-                                                  context, 'formUpdateProduct',
-                                                  arguments: listSuppliesProduct
-                                                      .elementAt(index));
-                                            },
-                                          ),
-                                          FlatButton(
-                                            child: Text('Borrar',
-                                                style: TextStyle(
-                                                    color: Colors.white)),
-                                            onPressed: () async {
-                                              var id = listSuppliesProduct
-                                                  .elementAt(index)
-                                                  .productID;
+  Widget productListSupplier(List<Product> listSuppliesProduct) {
+    return Center(
+      child: ListView.builder(
+          itemCount: listSuppliesProduct.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GFCard(
+              borderOnForeground: true,
+              boxFit: BoxFit.cover,
+              image: Image.network(
+                listSuppliesProduct[index].image,
+                height: MediaQuery.of(context).size.height * .25,
+                width: MediaQuery.of(context).size.width * 1,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
 
-                                                 // listSuppliesProduct.elementAt(index).
-
-                                              await Product.eliminarProduct(id);
-                                            },
-                                          ),
-                                          FlatButton(
-                                            child: Text(
-                                                'Stock ' +
-                                                    listSuppliesProduct
-                                                        .elementAt(index)
-                                                        .unitInStock
-                                                        .toString(),
-                                                style: TextStyle(
-                                                    color: Colors.white)),
-                                            onPressed: null,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                      );
-  }
-
-  Widget withOutProduct() 
-  {
-
-    return Center
-    (
-            child: AutoSizeText
-            (
-              "No tiene productos agregados",
-              maxFontSize: 150,
-              textAlign: TextAlign.center,
-              minFontSize: 25,
-              maxLines: 1,
-              style:TextStyle(height: 2, fontWeight: FontWeight.bold),
-           )
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      height: MediaQuery.of(context).size.height * .25,
+                      width: MediaQuery.of(context).size.width * 1,
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes !=null 
+                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                        : null
+                      ),
+                    ),
+                  );
+                },
+                fit: BoxFit.fitHeight,
+              ),
+              title: GFListTile(
+                avatar: GFAvatar(),
+                title: Text(
+                  listSuppliesProduct[index].name,
+                ),
+                subTitle: Text(listSuppliesProduct[index].category),
+              ),
+              content: Text(listSuppliesProduct[index].description),
+              buttonBar: GFButtonBar(
+                  alignment: WrapAlignment.spaceAround,
+                  children: <Widget>[
+                    GFButton(
+                      onPressed: () => Navigator.pushNamed(
+                          context, 'formUpdateProduct',
+                          arguments: listSuppliesProduct.elementAt(index)),
+                      text: 'Editar',
+                    ),
+                    GFButton(
+                      onPressed: () async => await Product.eliminarProduct(
+                          listSuppliesProduct.elementAt(index).productID),
+                      text: 'Borrar',
+                    ),
+                    GFButton(
+                        onPressed: () {},
+                        shape: GFButtonShape.pills,
+                        child: Text('Stock ' +
+                            listSuppliesProduct
+                                .elementAt(index)
+                                .unitInStock
+                                .toString())),
+                  ]),
+            );
+          }),
     );
   }
 
+  Widget withOutProduct() {
+    return Center(
+        child: AutoSizeText(
+      "No tiene productos agregados",
+      maxFontSize: 150,
+      textAlign: TextAlign.center,
+      minFontSize: 25,
+      maxLines: 1,
+      style: TextStyle(height: 2, fontWeight: FontWeight.bold),
+    ));
+  }
 }
