@@ -48,6 +48,22 @@ class _MainPageBussinesState extends State<MainPageBussines> {
         function: () => Navigator.popAndPushNamed(context, 'formCreateProduct'),
       ),
       DrawerOptions(
+        title: "Perfil",
+        icon: Icon(Icons.perm_contact_calendar),
+        function: () => Navigator.pushNamed(
+          context,
+          'perfil',
+        ),
+      ),
+       DrawerOptions(
+        title: "Ordenes",
+        icon: Icon(Icons.assignment),
+        function: () => Navigator.pushNamed(
+          context,
+          'ordenes',
+        ),
+      ),
+      DrawerOptions(
         title: "Cerrar sesion",
         icon: Icon(Icons.exit_to_app),
         function: () => Navigator.pushReplacementNamed(context, '/'),
@@ -119,26 +135,22 @@ class _MainPageBussinesState extends State<MainPageBussines> {
                 width: MediaQuery.of(context).size.width * 1,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
-                  return Center(
-
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      height: MediaQuery.of(context).size.height * .25,
-                      width: MediaQuery.of(context).size.width * 1,
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes !=null 
-                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                        : null
-                      ),
-                    ),
+                  return Container(
+                    padding: EdgeInsets.all(2),
+                    width: 150,
+                    height: 150,
+                    child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes
+                            : null),
                   );
                 },
                 fit: BoxFit.fitHeight,
               ),
               title: GFListTile(
-                avatar: GFAvatar(),
                 title: Text(
-                  listSuppliesProduct[index].name,
+                  "Titulo : ${listSuppliesProduct[index].name}",
                 ),
                 subTitle: Text(listSuppliesProduct[index].category),
               ),

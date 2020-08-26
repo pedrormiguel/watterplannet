@@ -16,36 +16,33 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  PageController _pageController;
+  int _page = 0;
 
-      PageController _pageController;
-      int _page = 0;
+  @override
+  void initState() {
+    super.initState();
+    _pageController = new PageController();
+  }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
 
-      @override
-      void initState() {
-        super.initState();
-        _pageController = new PageController();
-      }
-
-      @override
-      void dispose() {
-        super.dispose();
-        _pageController.dispose();
-      }
-
-       void navigationTapped(int page) {
-        // Animating to the page.
-        // You can use whatever duration and curve you like
-       _pageController.animateToPage(page,
+  void navigationTapped(int page) {
+    // Animating to the page.
+    // You can use whatever duration and curve you like
+    _pageController.animateToPage(page,
         duration: const Duration(milliseconds: 300), curve: Curves.ease);
-       }
+  }
 
-         void onPageChanged(int page) {
-          setState(() {
-            this._page = page;
-          });
-        }
-
+  void onPageChanged(int page) {
+    setState(() {
+      this._page = page;
+    });
+  }
 
   @override
   Widget build(BuildContext ctn) {
@@ -60,6 +57,12 @@ class _MainPageState extends State<MainPage> {
     ));
 
     draweOptions.add(new DrawerOptions(
+      title: "Perfil",
+      icon: Icon(Icons.perm_contact_calendar),
+      function: () => Navigator.pushNamed(ctn, 'perfil'),
+    ));
+
+    draweOptions.add(new DrawerOptions(
       title: "Cerrar sesion",
       icon: Icon(Icons.exit_to_app),
       function: () => Navigator.pushReplacementNamed(ctn, '/'),
@@ -70,67 +73,63 @@ class _MainPageState extends State<MainPage> {
       drawerOptions: draweOptions,
     );
 
-      return Scaffold
-      (
-        drawer: draweMenu,
-        appBar: AppBar(title: Text(widget.title)),
-        body: PageView(
-          children: <Widget>[HomePage(), ShopingCartPage("Carrito de Compra"), OrderList()],
-          onPageChanged: onPageChanged,
-          controller: _pageController,
-        ),
-        bottomNavigationBar: Theme( 
-               data: Theme.of(context).copyWith(
-                 canvasColor: Color(0xFF167F67)
-               ),
-               child: bottomBar() ),
-      );
+    return Scaffold
+    (
+      drawer: draweMenu,
+      appBar: AppBar( title: Center( child: Text( widget.title, textAlign: TextAlign.center,))),
+      body: PageView(
+        children: <Widget>[
+          HomePage(),
+          ShopingCartPage("Carrito de Compra"),
+          OrderList()
+        ],
+        onPageChanged: onPageChanged,
+        controller: _pageController,
+      ),
+      bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(canvasColor: Color(0xFF167F67)),
+          child: bottomBar()),
+    );
   }
 
- BottomNavigationBar bottomBar() =>
-        BottomNavigationBar(
-                  items: [
-
-                    new BottomNavigationBarItem(
-                        icon: new Icon(
-                          Icons.home,
-                          color: const Color(0xFFFFFFFF),
-                        ),
-                        title: new Text(
-                          "Home",
-                          style: new TextStyle(
-                            color: const Color(0xFFFFFFFF),
-                          ),
-                        )),
-
-                    new BottomNavigationBarItem(
-                        icon: new Icon(
-                          Icons.shopping_basket,
-                          color: const Color(0xFFFFFFFF),
-                        ),
-                        title: new Text(
-                          "Carrito",
-                          style: new TextStyle(
-                            color: const Color(0xFFFFFFFF),
-                          ),
-                        )),
-
-                    new BottomNavigationBarItem(
-                        icon: new Icon(
-                          Icons.local_offer,
-                          color: const Color(0xFFFFFFFF),
-                        ),
-                        title: new Text(
-                          "Ordenes",
-                          style: new TextStyle(
-                            color: const Color(0xFFFFFFFF),
-                          ),
-                        ))
-                  ],
-                  onTap: navigationTapped,
-                  currentIndex: _page,
-                  selectedItemColor: Colors.red,
-                );
-
-
+  BottomNavigationBar bottomBar() => BottomNavigationBar(
+        items: [
+          new BottomNavigationBarItem(
+              icon: new Icon(
+                Icons.home,
+                color: const Color(0xFFFFFFFF),
+              ),
+              title: new Text(
+                "Home",
+                style: new TextStyle(
+                  color: const Color(0xFFFFFFFF),
+                ),
+              )),
+          new BottomNavigationBarItem(
+              icon: new Icon(
+                Icons.shopping_basket,
+                color: const Color(0xFFFFFFFF),
+              ),
+              title: new Text(
+                "Carrito",
+                style: new TextStyle(
+                  color: const Color(0xFFFFFFFF),
+                ),
+              )),
+          new BottomNavigationBarItem(
+              icon: new Icon(
+                Icons.local_offer,
+                color: const Color(0xFFFFFFFF),
+              ),
+              title: new Text(
+                "Ordenes",
+                style: new TextStyle(
+                  color: const Color(0xFFFFFFFF),
+                ),
+              ))
+        ],
+        onTap: navigationTapped,
+        currentIndex: _page,
+        selectedItemColor: Colors.red,
+      );
 }

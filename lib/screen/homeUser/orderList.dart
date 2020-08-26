@@ -11,8 +11,6 @@ import 'package:watterplannet/utils/FoldingCell/FoldingWidget.dart';
 class OrderList extends StatefulWidget {
   @override
   _OrderListState createState() => _OrderListState();
-
-  // Order _order = new Order();
 }
 
 class _OrderListState extends State<OrderList> {
@@ -20,7 +18,6 @@ class _OrderListState extends State<OrderList> {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints.expand(),
-      margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * .10),
       child: StreamBuilder(
         stream: Order.orderRef
             .orderByChild("consumerID")
@@ -29,7 +26,8 @@ class _OrderListState extends State<OrderList> {
         builder: (context, AsyncSnapshot<Event> snapshot) {
           var grade = snapshot.connectionState.toString();
 
-          switch (grade) {
+          switch (grade) 
+          {
             case "ConnectionState.active":
               Map<dynamic, dynamic> values =
                   snapshot.data.snapshot.value != null
@@ -57,13 +55,19 @@ class _OrderListState extends State<OrderList> {
   Widget wrapperWidget(Map<dynamic, dynamic> values) {
     return FutureBuilder<List<Order>>(
         future: Order.getListOrderConsumer(values),
-        builder: (context, snapshot) {
+        builder: (context, snapshot) 
+        {
           if (snapshot.hasData) {
-            if (snapshot.data.length > 0) {
+            if (snapshot.data.length > 0) 
+            {
               return cardCustom(snapshot.data);
-            } else {
-              return Center(
-                  child: Container(
+            } else 
+
+            {
+              return Center
+              (
+                  child: Container
+              (
                 padding: EdgeInsets.only(right: 10),
                 child: Transform.rotate(
                   angle: -(3.5) / 4,
@@ -92,33 +96,50 @@ class _OrderListState extends State<OrderList> {
             child: Container(
                 width: double.infinity,
                 child:
-                    Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
-                  FutureBuilder<List<OrderDetail>>(
-                    future: Order.getListOrderDetail(
+                    Flex(
+                      
+                      direction: Axis.vertical,
+                      mainAxisSize: MainAxisSize.max, children: <Widget>
+                [
+                  FutureBuilder<List<OrderDetail>>
+                  (
+                    future: Order.getListOrderDetail
+                    (
                         elements.elementAt(index).orderIDOrderDetailId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
+                        
+                    builder: (context, snapshot) 
+                    {
+                      if (snapshot.hasData) 
+                      {
                         List<Widget> toShow = List<Widget>();
 
-                        snapshot.data.forEach((element) {
-                          toShow.add(FoldingCellSimpleDemo(
-                            id: elements.elementAt(index).orderID,
-                            address:
-                                elements.elementAt(index).orderShipToAddres,
-                            dateOfOrder: elements
-                                .elementAt(index)
-                                .getDateFormated()
-                                .toUpperCase(),
-                            statusOrder: elements.elementAt(index).orderStatus,
-                            changeToNotShowOrder: elements
-                                .elementAt(index)
-                                .changeStatusToNotShowOrder,
-                            orderDetailProduct: element.orderDetailProducts,
-                          ));
+                        snapshot.data.forEach((element) 
+                        {
+                            toShow.add
+                            ( 
+                                    FoldingCellSimpleDemo
+                                    (
+                                        id: elements.elementAt(index).orderID,
+                                        address:
+                                            elements.elementAt(index).orderShipToAddres,
+                                        dateOfOrder: elements
+                                            .elementAt(index)
+                                            .getDateFormated()
+                                            .toUpperCase(),
+                                        statusOrder: elements.elementAt(index).orderStatus,
+                                        changeToNotShowOrder: elements
+                                            .elementAt(index)
+                                            .changeStatusToNotShowOrder,
+                                        orderDetailProduct: element.orderDetailProducts,
+                                    )
+                            );
                         });
 
                         return Column(children: toShow);
-                      } else if (snapshot.hasError) {}
+                      } else if (snapshot.hasError) 
+                      {
+                        print(snapshot.error);
+                      }
 
                       return CircularProgressIndicator();
                     },

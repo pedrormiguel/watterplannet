@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:watterplannet/class/data.dart';
 import 'package:watterplannet/class/product.dart';
 import 'package:watterplannet/class/shoppingCart.dart';
@@ -149,7 +150,8 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       maxChildSize: .8,
       initialChildSize: .53,
       minChildSize: .53,
-      builder: (context, scrollController) {
+      builder: (context, scrollController) 
+      {
         return Container(
           padding: AppTheme.padding.copyWith(bottom: 0),
           decoration: BoxDecoration(
@@ -158,12 +160,14 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                 topRight: Radius.circular(40),
               ),
               color: Colors.white),
-          child: SingleChildScrollView(
+          child: SingleChildScrollView
+          (
             controller: scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
+              children: <Widget>
+              [
                 SizedBox(height: 5),
                 Container(
                   alignment: Alignment.center,
@@ -186,22 +190,22 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          Row(
+                          Row
+                          (
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              TitleText(
-                                text: "\$ ",
-                                fontSize: 18,
-                                color: LightColor.red,
-                              ),
-                              TitleText(
-                                text: widget.curretItem.price.toString(),
-                                fontSize: 25,
-                              ),
-                            ],
+                            children: <Widget>
+                            [
+                                    TitleText
+                                    (
+                                      text: NumberFormat.simpleCurrency(decimalDigits: 1).format(widget.curretItem.price),
+                                      fontSize: 25,
+                                    )
+                            ]
                           ),
-                          Row(
-                            children: <Widget>[
+                          Row
+                          (
+                            children: <Widget>
+                            [
                               Icon(Icons.star,
                                   color: LightColor.yellowColor, size: 17),
                               Icon(Icons.star,
@@ -218,14 +222,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                     ],
                   ),
                 ),
-                // SizedBox(
-                //   height: 20,
-                // ),
-                // _availableSize(),
-                // SizedBox(
-                //   height: 20,
-                // ),
-                // _availableColor(),
+               
                 SizedBox(
                   height: 20,
                 ),

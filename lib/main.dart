@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'WatterPlannet',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

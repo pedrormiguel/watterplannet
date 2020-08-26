@@ -1,5 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/list_tile/gf_list_tile.dart';
+import 'package:getwidget/getwidget.dart';
 
 import 'package:watterplannet/class/data.dart';
 import 'package:watterplannet/class/ordenes/order.dart';
@@ -9,10 +10,14 @@ import 'package:watterplannet/services/Auth.dart';
 import 'package:watterplannet/theme/light_color.dart';
 import 'package:watterplannet/theme/theme.dart';
 import 'package:watterplannet/utils/FlushBart.dart';
+import 'package:watterplannet/utils/Sizes/SizesConfi.dart';
 
 class ShopingCartPage extends StatefulWidget {
   final String title;
-  const ShopingCartPage(this.title,{Key key, }) : super(key: key);
+  const ShopingCartPage(
+    this.title, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _ShopingCartPageState createState() => _ShopingCartPageState();
@@ -20,129 +25,75 @@ class ShopingCartPage extends StatefulWidget {
 
 class _ShopingCartPageState extends State<ShopingCartPage> {
   Widget _cartItems(BuildContext context) {
-    return Column(
-        children: AppData.cartList.itemSelect
-            .map((e) => _item(e.product, e.cuantity, e.positionList, context))
-            .toList());
+    return Container(
+      width: SizeConfig.blockSizeHorizontal * 100,
+      height: SizeConfig.blockSizeVertical * 60,
+      child: SingleChildScrollView(
+        child: Column(
+            //direction: Axis.vertical,
+            children: AppData.cartList.itemSelect
+                .map((e) =>
+                    _item(e.product, e.cuantity, e.positionList, context))
+                .toList()),
+      ),
+    );
   }
 
   Widget _item(
       Product model, int cantidad, int position, BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(bottom: 3),
-      height: MediaQuery.of(context).size.height * .15,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: 1.2,
-            child: Stack(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Container(
-                    constraints: BoxConstraints.expand(),
-                    child: Stack(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: LightColor.lightGrey,
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                    constraints: BoxConstraints.expand(),
-                    alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.contain,
-                            image: NetworkImage(model.image))))
-              ],
-            ),
+    return Row(
+      //direction: Axis.horizontal,
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Container(
+          width: SizeConfig.blockSizeHorizontal * 60,
+          height: SizeConfig.blockSizeVertical * 20,
+          child: GFListTile(
+            avatar: Container(
+                width: SizeConfig.blockSizeHorizontal * 20,
+                height: SizeConfig.blockSizeVertical * 10,
+                decoration: new BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    image: new DecorationImage(
+                        fit: BoxFit.fill,
+                        image: new NetworkImage(model.image)))),
+            //shape: GFAvatarShape.square,
+
+            titleText: model.name,
+            subtitleText: model.price.toString(),
           ),
-          Expanded(
-              child: ListTile(
-            title: AutoSizeText(
-              model.name,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-              ),
-              maxLines: 2,
-              maxFontSize: 12,
-              minFontSize: 10,
-            ),
-            subtitle: Row(
-              children: <Widget>[
-                TitleText(
-                  text: '\$ ',
-                  color: LightColor.red,
-                  fontSize: 12,
-                ),
-                TitleText(
-                  text: model.price.toString(),
-                  fontSize: 14,
-                ),
-              ],
-            ),
-            trailing: Container(
-              width: 35,
-              height: 35,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: LightColor.lightGrey.withAlpha(150),
-                  borderRadius: BorderRadius.circular(10)),
-              child: TitleText(
-                text: '$cantidad',
-                fontSize: 12,
-              ),
-            ),
-          )),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              IconButton(
-                color: Colors.blue,
-                icon: new Icon(Icons.add),
-                onPressed: () {
-                  setState(() {
-                    AppData.cartList.itemSelect.elementAt(position).cuantity +=
-                        1;
-                  });
-                },
-              ),
-              IconButton(
-                color: Colors.red,
-                icon: new Icon(Icons.remove),
-                onPressed: () {
-                  setState(() {
-                    if (cantidad > 1)
-                      AppData.cartList.itemSelect
-                          .elementAt(position)
-                          .cuantity -= 1;
-                    else
-                      AppData.cartList.itemSelect.removeAt(position);
-                    for (var i = 0;
-                        i < AppData.cartList.itemSelect.length;
-                        i++) {
-                      AppData.cartList.itemSelect.elementAt(i).positionList = i;
-                    }
-                  });
-                },
-              )
-            ],
-          )
-        ],
-      ),
+        ),
+        IconButton(
+            color: Colors.blue,
+            icon: new Icon(Icons.add),
+            onPressed: () => setState(() =>
+                AppData.cartList.itemSelect.elementAt(position).cuantity += 1)),
+        Container(
+          width: 5,
+          height: 35,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: LightColor.lightGrey.withAlpha(150),
+              borderRadius: BorderRadius.circular(10)),
+          child: TitleText(text: '$cantidad', fontSize: 12),
+        ),
+        IconButton(
+          color: Colors.red,
+          icon: new Icon(Icons.remove),
+          onPressed: () {
+            setState(() {
+              if (cantidad > 1)
+                AppData.cartList.itemSelect.elementAt(position).cuantity -= 1;
+              else
+                AppData.cartList.itemSelect.removeAt(position);
+              for (var i = 0; i < AppData.cartList.itemSelect.length; i++) {
+                AppData.cartList.itemSelect.elementAt(i).positionList = i;
+              }
+            });
+          },
+        )
+      ],
     );
   }
 
@@ -193,23 +144,21 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     return Scaffold(
         body: Container(
+      width: SizeConfig.blockSizeHorizontal * 100,
+      height: SizeConfig.blockSizeVertical * 100,
       padding: AppTheme.padding,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            _cartItems(context),
-            Divider(
-              thickness: 1,
-              height: 50,
-            ),
-            _price(),
-            SizedBox(height: 30),
-            _submitButton(context),
-          ],
-        ),
+      child: Column(
+        //direction: Axis.vertical,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          _cartItems(context),
+          _price(),
+          _submitButton(context),
+        ],
       ),
     ));
   }
@@ -218,13 +167,14 @@ class _ShopingCartPageState extends State<ShopingCartPage> {
     if (AppData.cartList.itemSelect.length <= 0) {
       FlusBar().getBar(
           context: context, message: 'Agrega algun producto al carrito.');
-    } else if (AppData.cartList.itemSelect != null) {
-      // TODO Dirreccion buscar direccion de cliente.
+    } else if (AppData.cartList.itemSelect != null) 
+    {
 
-      new Order(
-          consumerID: Authentication.result.user.uid,
-          orderShipToAddres: "PRADO" //Todo Arreglar direccion
-          );
+        Order
+         (
+            consumerID: Authentication.result.user.uid,
+            orderShipToAddres: "PRADO" //Todo Arreglar direccion
+         );
 
       setState(() => AppData.cartList.itemSelect.clear());
 

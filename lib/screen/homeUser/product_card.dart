@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:watterplannet/class/product.dart';
 import 'package:watterplannet/theme/light_color.dart';
 
@@ -53,30 +54,35 @@ class _ProductCardState extends State<ProductCard> {
             Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
+              children: <Widget>
+              [
                 SizedBox(height: model.isSelected ? 15 : 0),
-                Stack(
+                Stack
+                (
                   alignment: Alignment.center,
-                  children: <Widget>[
+                  children: <Widget>
+                  [
                     CircleAvatar(
                       radius: 50,
                       backgroundColor: LightColor.orange.withAlpha(40),
                     ),
-                    SafeArea(
-                        child: Container(
-                      // width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * .1,
-                      child: Image.network(model.image,
-                          loadingBuilder: (context, child, progress) {
-                        return progress == null
-                            ? child
-                            : CircularProgressIndicator(
-                                value: progress.expectedTotalBytes != null
-                                    ? progress.cumulativeBytesLoaded /
-                                        progress.expectedTotalBytes
-                                    : null);
-                      }),
-                    ))
+                    SafeArea
+                    (
+                        child: Container
+                        (
+                            child: Image.network
+                            (   model.image, filterQuality: FilterQuality.low,
+                                loadingBuilder: (context, child, progress) => progress == null
+                                  ? child
+                                  : CircularProgressIndicator(
+                                      value: progress.expectedTotalBytes != null
+                                          ? progress.cumulativeBytesLoaded /
+                                              progress.expectedTotalBytes
+                                          : null)
+                            
+                            ),
+                        )
+                    )
                   ],
                 ),
                 AutoSizeText(
@@ -90,7 +96,7 @@ class _ProductCardState extends State<ProductCard> {
                       color: LightColor.orange),
                 ),
                 AutoSizeText(
-                  model.price.toString(),
+                  NumberFormat.simpleCurrency().format(model.price),
                   style: TextStyle(fontSize: model.isSelected ? 10 : 1),
                 ),
               ],
